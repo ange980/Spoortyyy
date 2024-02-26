@@ -28,20 +28,76 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _selectedIndex = 0; // Ajoutez cette ligne
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ComicsApplication',
       theme: ThemeData(
         primaryColor: AppColors.screenBackground,
         useMaterial3: true,
         fontFamily: 'Nunito',
       ),
-      home: DetailSerie(),
+      /// ******NAVBAR******
+      home: Scaffold(
+        body: DetailSerie(),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppColors.bottomBarBackground,
+          selectedItemColor: AppColors.bottomBarSelectedText,
+          unselectedItemColor: AppColors.bottomBarUnselectedText,
+          currentIndex: _selectedIndex, // Utilisez l'index sélectionné ici
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index; // Mettez à jour l'index sélectionné lorsque vous appuyez sur un élément
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_home.svg',
+                color: _selectedIndex == 0 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Accueil',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_comics.svg',
+                color: _selectedIndex == 1 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Comics',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_series.svg',
+                color: _selectedIndex == 2 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Séries',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_movies.svg',
+                color: _selectedIndex == 3 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Films',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_search.svg',
+                color: _selectedIndex == 4 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Recherche',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -52,9 +108,7 @@ class DetailSerie extends StatelessWidget {
     final theme = Theme.of(context); // THEME APPLICATION
     return Scaffold(
       backgroundColor: theme.primaryColor,
-      appBar: AppBar(
-        title: Text('Agents of S.H.I.E.L.D.'),
-      ),
+
       body: DefaultTabController(
         length: 3,
         child: Column(
