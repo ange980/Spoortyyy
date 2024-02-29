@@ -44,7 +44,7 @@ class MyApp extends StatefulWidget {
 class _BienvenuePage extends State<MyApp> {
   int _selectedIndex = 0;
 
-  // Liste de chaque page correspondant aux onglets (Garder dans l'ordre)
+  // Liste de chaque page correspondantes aux onglets (Garder dans l'ordre)
   final List<Widget> _pages = [
     HomePage(),
     ComicsPage(),

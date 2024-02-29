@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:blur/blur.dart';
 
 ///COULEURS
 class AppColors {
@@ -31,74 +32,90 @@ class SeriesPage extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 32.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Stack(
                     children: [
-                      /// COTE DROIT
-                      /// IMAGE SERIE **CHANGER**
-                      SvgPicture.asset(
-                        'assets/svg/ic_publisher_bicolor.svg',
-                        color: AppColors.cardElementBackground,
-                        width: 100,
-                        height: 100,
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/image/arrow_cover.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 24), //Espace icône et texte
-                      ///COTE GAUCHE
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// ******REUTILISABLE***** Icone + texte
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/ic_publisher_bicolor.svg',
-                                color: AppColors.element,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Title Serie',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 16,
+                      Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            /// COTE DROIT
+
+                            /// IMAGE SERIE **CHANGER**
+                            Image.asset('assets/image/arrow_cover.jpg'),
+                            SizedBox(width: 24), //Espace icône et texte
+                            ///COTE GAUCHE
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Title Serie',
+                                  style: TextStyle(
+                                    color: AppColors.element,
+                                    fontSize: 24, // Taille de police plus grande
+                                    fontWeight: FontWeight.bold, // Texte en gras
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/ic_tv_bicolor.svg',
-                                color: AppColors.element,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Number of episode',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 16,
+                                /// ******REUTILISABLE***** Icone + texte
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/svg/ic_publisher_bicolor.svg',
+                                      color: AppColors.element,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Title Serie',
+                                      style: TextStyle(
+                                        color: AppColors.element,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/ic_calendar_bicolor.svg',
-                                color: AppColors.element,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Date',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 16,
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/svg/ic_tv_bicolor.svg',
+                                      color: AppColors.element,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Number of episode',
+                                      style: TextStyle(
+                                        color: AppColors.element,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/svg/ic_calendar_bicolor.svg',
+                                      color: AppColors.element,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Date',
+                                      style: TextStyle(
+                                        color: AppColors.element,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                       ),
                     ],
                   ),
@@ -118,6 +135,7 @@ class SeriesPage extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+                    ///TEXTE HISTOIRE SERIE
                     child: Text(
                       'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
                           'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
@@ -127,9 +145,10 @@ class SeriesPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-
                   ),
+                  ///LISTE PERSONNAGES
                   Icon(Icons.people), // Remplacer par le contenu réel
+                  ///LISTE EPISODE
                   Icon(Icons.list),  // Remplacer par le contenu réel
                 ],
               ),
