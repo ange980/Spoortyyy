@@ -32,11 +32,22 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyApp> createState() => _BienvenuePage();
 }
 
-class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0; // Ajoutez cette ligne
+
+///MON APP REGLAGES
+class _BienvenuePage extends State<MyApp> {
+  int _selectedIndex = 0;
+
+  // Liste de chaque page correspondant aux onglets (Garder dans l'ordre)
+  final List<Widget> _pages = [
+    HomePage(),
+    ComicsPage(),
+    SeriesPage(),
+    MoviesPage(),
+    SearchPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +59,18 @@ class _MyAppState extends State<MyApp> {
       ),
       /// ******NAVBAR******
       home: Scaffold(
-        body: DetailSerie(),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _pages,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: AppColors.bottomBarBackground,
           selectedItemColor: AppColors.bottomBarSelectedText,
           unselectedItemColor: AppColors.bottomBarUnselectedText,
-          currentIndex: _selectedIndex, // Utilisez l'index sélectionné ici
+          currentIndex: _selectedIndex,
           onTap: (index) {
             setState(() {
-              _selectedIndex = index; // Mettez à jour l'index sélectionné lorsque vous appuyez sur un élément
+              _selectedIndex = index;
             });
           },
           items: [
@@ -102,7 +116,97 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class DetailSerie extends StatelessWidget {
+///PAGE DE BIENVENUE
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Premier Écran'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Aller au second écran'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SeriesPage()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+///PAGE LISTE COMICS
+class ComicsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ecran sur les Comics '),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Aller ecran Film'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MoviesPage()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+///PAGE LISTE FILMS
+class MoviesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ecran des Films '),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Aller ecran Serie'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SeriesPage()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+///PAGE RECHERCHE
+class SearchPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ecran Recherche '),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Aller ecran Bienvneu'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+///PAGE LISTE SERIES
+class SeriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // THEME APPLICATION
