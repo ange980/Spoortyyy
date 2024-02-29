@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'comics.dart';
+import 'search.dart';
+import 'movies.dart';
+import 'series.dart';
 
 ///COULEURS
 class AppColors {
@@ -139,195 +143,11 @@ class HomePage extends StatelessWidget {
   }
 }
 
-///PAGE LISTE COMICS
-class ComicsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ecran sur les Comics '),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Aller ecran Film'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MoviesPage()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
 
-///PAGE LISTE FILMS
-class MoviesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ecran des Films '),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Aller ecran Serie'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SeriesPage()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
 
-///PAGE RECHERCHE
-class SearchPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ecran Recherche '),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Aller ecran Bienvneu'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    );
-  }
-}
 
-///PAGE LISTE SERIES
-class SeriesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context); // THEME APPLICATION
-    return Scaffold(
-      backgroundColor: theme.primaryColor,
 
-      body: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 32.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      /// COTE DROIT
-                      /// IMAGE SERIE **CHANGER**
-                      SvgPicture.asset(
-                        'assets/svg/ic_publisher_bicolor.svg',
-                        color: AppColors.cardElementBackground,
-                        width: 100,
-                        height: 100,
-                      ),
-                      SizedBox(width: 24), //Espace icône et texte
-                      ///COTE GAUCHE
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// ******REUTILISABLE***** Icone + texte
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/ic_publisher_bicolor.svg',
-                                color: AppColors.element,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Title Serie',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/ic_tv_bicolor.svg',
-                                color: AppColors.element,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Number of episode',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/ic_calendar_bicolor.svg',
-                                color: AppColors.element,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Date',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
-            TabBar(
-              tabs: [
-                Tab(text: 'Histoire'),
-                Tab(text: 'Personnages'),
-                Tab(text: 'Épisodes'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
-                            'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
-                            'strange new world of "superheroes" after the "Battle of New York", protecting the public '
-                            'from new and unknown threats.',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
 
-                  ),
-                  Icon(Icons.people), // Remplacer par le contenu réel
-                  Icon(Icons.list),  // Remplacer par le contenu réel
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+
+
 
