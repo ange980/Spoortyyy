@@ -1,4 +1,4 @@
-# untitled
+# Comics Application - Flutter Project
 
 A new Flutter project.
 
