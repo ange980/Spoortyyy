@@ -48,10 +48,7 @@ class SeriesPage extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: 10, // Nombre arbitraire de films à afficher
                   itemBuilder: (BuildContext context, int index) {
-                    // Vous pouvez remplacer `10` par le nombre de films que vous voulez afficher
-                    // Calcul du numéro de classement de popularité (index + 1)
                     int rank = index + 1;
-                    // Création de MovieWidget en passant le numéro de classement
                     return Column(
                       children: [
                         SeriesWidget(rank),
@@ -105,7 +102,7 @@ class SeriesWidget extends StatelessWidget {
                       'Titre de la série',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.0,
+                        fontSize: 17.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -123,6 +120,8 @@ class SeriesWidget extends StatelessWidget {
                           'Marvel',
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ],
@@ -140,6 +139,8 @@ class SeriesWidget extends StatelessWidget {
                           'Nb épisode',
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ],
