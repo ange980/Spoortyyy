@@ -75,7 +75,10 @@ class ComicVineMovie {
   @JsonKey(name: 'runtime')
   final String? runtime;
 
-  ComicVineMovie(this.id,this.name, this.releaseDate, this.runtime);
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
+
+  ComicVineMovie(this.id,this.name, this.releaseDate, this.runtime, this.image);
 
   factory ComicVineMovie.fromJson(Map<String, dynamic> json) =>
       _$ComicVineMovieFromJson(json);
@@ -118,7 +121,10 @@ class ComicVinePublisher {
   @JsonKey(name: 'name')
   final String name;
 
-  ComicVinePublisher(this.apiDetailUrl, this.id, this.name);
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
+
+  ComicVinePublisher(this.apiDetailUrl, this.id, this.name,this.image);
 
   factory ComicVinePublisher.fromJson(Map<String, dynamic> json) =>
       _$ComicVinePublisherFromJson(json);
@@ -142,8 +148,11 @@ class ComicVineSeries {
   @JsonKey(name: 'start_year')
   final String year;
 
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
 
-  ComicVineSeries(this.id, this.name,this.nbEpisode, this.year);
+
+  ComicVineSeries(this.id, this.name,this.nbEpisode, this.year, this.image);
 
   factory ComicVineSeries.fromJson(Map<String, dynamic> json) =>
       _$ComicVineSeriesFromJson(json);
@@ -170,4 +179,15 @@ class ComicVineVolume {
       _$ComicVineVolumeFromJson(json);
 
   Map<String, dynamic> toJson() => _$ComicVineVolumeToJson(this);
+}
+
+///RECUP IMAGE  - affichage : Image.network(movie.image!.iconUrl, width: 50, height: 50) : null
+@JsonSerializable()
+class ComicVineImage {
+  @JsonKey(name: 'icon_url') // Utilisez le bon nom de clé JSON ici
+  final String iconUrl;
+
+  ComicVineImage(this.iconUrl);
+
+  factory ComicVineImage.fromJson(Map<String, dynamic> json) => _$ComicVineImageFromJson(json);
 }

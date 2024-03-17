@@ -6,7 +6,6 @@ import 'package:retrofit/retrofit.dart';
 
 part 'comicvine_api.g.dart';
 
-
 @RestApi()
 abstract class ComicVineAPI {
   factory ComicVineAPI(Dio dio, {String baseUrl}) = _ComicVineAPI;
