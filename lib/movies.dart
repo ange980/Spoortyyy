@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:untitled/comicvine_model.dart';
+import 'package:untitled/comicvine_api.dart';
+import 'package:go_router/go_router.dart';
 
 ///COULEURS
 class AppColors {
@@ -44,18 +47,37 @@ class MoviesPage extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  itemCount: 10, // Nombre arbitraire de films à afficher
-                  itemBuilder: (BuildContext context, int index) {
-                    // Vous pouvez remplacer `10` par le nombre de films que vous voulez afficher
-                    // Calcul du numéro de classement de popularité (index + 1)
-                    int rank = index + 1;
-                    // Création de MovieWidget en passant le numéro de classement
-                    return Column(
-                      children: [
-                        MovieWidget(rank),
-                        SizedBox(height: 16.0), // Espace entre chaque film
-                      ],
+                // FutureBuilder pour récupérer les séries depuis l'API
+                child: FutureBuilder<ComicVineMoviesResponse>(
+                  future: ComicVineRequests().getMovies(), // Assurez-vous que cette méthode retourne les bonnes données
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Une erreur est survenue !', style: TextStyle(color: Colors.white));
+                    }
+                    if (!snapshot.hasData || snapshot.data!.results.isEmpty) {
+                      return Text('Aucune série trouvée.', style: TextStyle(color: Colors.white));
+                    }
+                    // ListView pour afficher les séries
+                    return ListView.builder(
+                      itemCount: snapshot.data!.results.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final movies = snapshot.data!.results[index];
+                        return Column(
+                          children: [
+                            MovieWidget(
+                              rank: index + 1,
+                              title: movies.name ?? 'Nom inconnu',
+                              imageUrl: movies.image?.iconUrl ?? 'URL par défaut',
+                              time: movies.runtime ?? '160',
+                              date: movies.releaseDate ?? '1999'
+                            ),
+                            SizedBox(height: 16.0), // Espace entre chaque série
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
@@ -70,9 +92,20 @@ class MoviesPage extends StatelessWidget {
 
 
 class MovieWidget extends StatelessWidget {
+
+  final String title;
+  final String imageUrl;
+  final String time;
+  final String date;
   final int rank;
 
-  MovieWidget(this.rank);
+  MovieWidget({
+    required this.rank,
+    required this.title,
+    required this.imageUrl,
+    required this.time,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,12 +121,8 @@ class MovieWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  'assets/svg/img.png',
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.fill,
-                ),
+                child:
+                Image.network(this.imageUrl, width: 100, height: 100),
               ),
               SizedBox(width: 16.0),
               Expanded(
@@ -101,7 +130,7 @@ class MovieWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Titre du Film',
+                      this.title,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -119,26 +148,29 @@ class MovieWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          'Note: 4.5',
+                          '${this.time} minutes',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      'Genre: Action',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      'Durée: 120 min',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/svg/ic_calendar_bicolor.svg',
+                          width: 15,
+                          height: 15,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 15.0),
+                        Text(
+                          this.date,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

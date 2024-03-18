@@ -99,7 +99,7 @@ class ComicVineMovieDetail {
   @JsonKey(name: 'release_date')
   final String? releaseDate;
 
-  @JsonKey(name: 'budget')
+  @JsonKey(name: 'runtime')
   final int budget;
 
   ComicVineMovieDetail(this.id,this.name, this.releaseDate, this.budget);
