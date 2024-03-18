@@ -122,7 +122,7 @@ class MovieWidget extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child:
-                Image.network(this.imageUrl, width: 100, height: 100),
+                Image.network(this.imageUrl, width: 128, height: 163, fit: BoxFit.cover),
               ),
               SizedBox(width: 16.0),
               Expanded(

@@ -46,17 +46,19 @@ class ComicVineMoviesDetailResponse{
 }
 
 @JsonSerializable()
-class ComicVineVolumesResponse {
+class ComicVineIssuesResponse{
   @JsonKey(name: 'results')
-  final List<ComicVineVolume> results;
+  final List<ComicVineIssues> results;
 
-  ComicVineVolumesResponse(this.results);
+  ComicVineIssuesResponse(this.results);
 
-  factory ComicVineVolumesResponse.fromJson(Map<String, dynamic> json) =>
-      _$ComicVineVolumesResponseFromJson(json);
+  factory ComicVineIssuesResponse.fromJson(Map<String, dynamic> json) {
+    return _$ComicVineIssuesResponseFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => _$ComicVineVolumesResponseToJson(this);
+  Map<String, dynamic> toJson() => _$ComicVineIssuesResponseToJson(this);
 }
+
 
 
 //Informations Page Film
@@ -163,22 +165,34 @@ class ComicVineSeries {
 
 //Informations Page Comics
 @JsonSerializable()
-class ComicVineVolume {
+class ComicVineIssues {
+
+  @JsonKey(name: 'id')
+  final int id;
+
   @JsonKey(name: 'name')
   final String? name;
 
   @JsonKey(name: 'issue_number')
-  final int? issueNumber;
+  final String? number;
 
-  @JsonKey(name: 'date_added')
-  final String? dateAdded;
+  @JsonKey(name: 'cover_date')
+  final String? date;
 
-  ComicVineVolume(this.name, this.issueNumber,this.dateAdded);
+  @JsonKey(name: 'volume')
+  final ComicVineComic? comic;
 
-  factory ComicVineVolume.fromJson(Map<String, dynamic> json) =>
-      _$ComicVineVolumeFromJson(json);
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
 
-  Map<String, dynamic> toJson() => _$ComicVineVolumeToJson(this);
+
+
+  ComicVineIssues(this.id,this.name, this.number,this.image,this.comic,this.date);
+
+  factory ComicVineIssues.fromJson(Map<String, dynamic> json) =>
+      _$ComicVineIssuesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ComicVineIssuesToJson(this);
 }
 
 ///RECUP IMAGE  - affichage : Image.network(movie.image!.iconUrl, width: 50, height: 50) : null
@@ -190,4 +204,16 @@ class ComicVineImage {
   ComicVineImage(this.iconUrl);
 
   factory ComicVineImage.fromJson(Map<String, dynamic> json) => _$ComicVineImageFromJson(json);
+}
+
+///RECUP COMIC
+@JsonSerializable()
+class ComicVineComic {
+
+  @JsonKey(name: 'name')
+  final String name;
+
+  ComicVineComic(this.name);
+
+  factory ComicVineComic.fromJson(Map<String, dynamic> json) => _$ComicVineComicFromJson(json);
 }
