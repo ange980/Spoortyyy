@@ -32,7 +32,7 @@ final GoRouter _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (BuildContext context, GoRouterState state) => HomePage(),
+      builder: (BuildContext context, GoRouterState state) => SeriesPage(),
     ),
     GoRoute(
       path: '/comics',
@@ -48,10 +48,13 @@ final GoRouter _router = GoRouter(
       path: '/series',
       builder: (BuildContext context, GoRouterState state) => SeriesPage(),
       routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailComics(),
-        ),
+        /*GoRoute(
+          path: '/seriesDetail/:id',
+          builder: (BuildContext context, GoRouterState state) {
+            final id = state.pathParameters['id']!;
+            return DetailSeries(seriesId: id);
+          },
+        ),*/
       ],
     ),
     GoRoute(
