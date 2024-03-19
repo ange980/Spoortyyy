@@ -43,7 +43,8 @@ class ComicsPage extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 0.0),
                 child: ListView.builder(
                   itemCount: 10, // Nombre arbitraire de films à afficher
                   itemBuilder: (BuildContext context, int index) {
