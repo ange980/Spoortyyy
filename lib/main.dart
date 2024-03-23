@@ -117,6 +117,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 color: AppColors.bottomBarBackground,
               ),
+
               child: BottomNavigationBar(
                 backgroundColor: Colors.transparent,
                 currentIndex: _currentTabPosition,
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage> {
       case AppTabs.movies:
         return MoviesPage();
       case AppTabs.search:
-        return Center(child: Text('Recherche'));
+        return SearchPage();
     }
   }
 }

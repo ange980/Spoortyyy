@@ -29,7 +29,7 @@ class MoviesPage extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top:40,left: 40,right: 50 ),
                 child: Text(
                   'Films les plus populaires',
                   style: TextStyle(
