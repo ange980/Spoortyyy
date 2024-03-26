@@ -260,8 +260,22 @@ class ComicVineIssueDetail {
   @JsonKey(name: 'name')
   final String? name;
 
+  @JsonKey(name: 'issue_number')
+  final String? number;
 
-  ComicVineIssueDetail(this.id,this.name);
+  @JsonKey(name: 'cover_date')
+  final String? date;
+
+  @JsonKey(name: 'volume')
+  final ComicVineComic? comic;
+
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
+
+  @JsonKey(name: 'deck')
+  final String? description;
+
+  ComicVineIssueDetail(this.id,this.name,this.number,this.comic, this.date,this.image, this.description);
 
   factory ComicVineIssueDetail.fromJson(Map<String, dynamic> json) =>
       _$ComicVineIssueDetailFromJson(json);
@@ -272,7 +286,7 @@ class ComicVineIssueDetail {
 ///RECUP IMAGE  - affichage : Image.network(movie.image!.iconUrl, width: 50, height: 50) : null
 @JsonSerializable()
 class ComicVineImage {
-  @JsonKey(name: 'icon_url') // Utilisez le bon nom de clé JSON ici
+  @JsonKey(name: 'icon_url')
   final String iconUrl;
 
   ComicVineImage(this.iconUrl);

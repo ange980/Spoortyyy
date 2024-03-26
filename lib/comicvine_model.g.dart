@@ -216,6 +216,15 @@ ComicVineIssueDetail _$ComicVineIssueDetailFromJson(
     ComicVineIssueDetail(
       json['id'] as int,
       json['name'] as String?,
+      json['issue_number'] as String?,
+      json['volume'] == null
+          ? null
+          : ComicVineComic.fromJson(json['volume'] as Map<String, dynamic>),
+      json['cover_date'] as String?,
+      json['image'] == null
+          ? null
+          : ComicVineImage.fromJson(json['image'] as Map<String, dynamic>),
+      json['deck'] as String?,
     );
 
 Map<String, dynamic> _$ComicVineIssueDetailToJson(
@@ -223,6 +232,11 @@ Map<String, dynamic> _$ComicVineIssueDetailToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'issue_number': instance.number,
+      'cover_date': instance.date,
+      'volume': instance.comic,
+      'image': instance.image,
+      'deck': instance.description,
     };
 
 ComicVineImage _$ComicVineImageFromJson(Map<String, dynamic> json) =>
