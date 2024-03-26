@@ -46,33 +46,6 @@ class _ComicVineAPI implements ComicVineAPI {
   }
 
   @override
-  Future<ComicVineMoviesDetailResponse> getMovieDetail(int movieId) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ComicVineMoviesDetailResponse>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/movie/4000-1',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = ComicVineMoviesDetailResponse.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
   Future<ComicVineSeriesResponse> loadSeries({int limit = 20}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};
@@ -96,6 +69,87 @@ class _ComicVineAPI implements ComicVineAPI {
               baseUrl,
             ))));
     final value = ComicVineSeriesResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ComicVineSerieDetailResponse> getSeriesDetail(String serieId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ComicVineSerieDetailResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'series/4075-${serieId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ComicVineSerieDetailResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ComicVineMoviesDetailResponse> getMoviesDetail(String moviesId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ComicVineMoviesDetailResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'movie/4025-${moviesId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ComicVineMoviesDetailResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ComicVineIssueDetailResponse> getIssueDetail(String issueId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ComicVineIssueDetailResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'issue/4000-${issueId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ComicVineIssueDetailResponse.fromJson(_result.data!);
     return value;
   }
 

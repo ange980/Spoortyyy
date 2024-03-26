@@ -65,17 +65,24 @@ class MoviesPage extends StatelessWidget {
                       itemCount: snapshot.data!.results.length,
                       itemBuilder: (BuildContext context, int index) {
                         final movies = snapshot.data!.results[index];
-                        return Column(
-                          children: [
-                            MovieWidget(
-                              rank: index + 1,
-                              title: movies.name ?? 'Nom inconnu',
-                              imageUrl: movies.image?.iconUrl ?? 'URL par défaut',
-                              time: movies.runtime ?? '160',
-                              date: movies.releaseDate ?? '1999'
-                            ),
-                            SizedBox(height: 16.0), // Espace entre chaque série
-                          ],
+                        return InkWell(
+                          onTap: () {
+                            GoRouter.of(context).go('/moviesDetail/${movies.id}');
+                            print(movies.id);
+                          },
+                          child: Column(
+                            children: [
+                              MovieWidget(
+                                  rank: index + 1,
+                                  title: movies.name ?? 'Nom inconnu',
+                                  imageUrl: movies.image?.iconUrl ?? 'URL par défaut',
+                                  time: movies.runtime ?? '160',
+                                  date: movies.releaseDate ?? '1999'
+                              ),
+                              SizedBox(height: 16.0), // Espace entre chaque série
+                            ],
+                          ),
+
                         );
                       },
                     );
@@ -203,6 +210,10 @@ class MovieWidget extends StatelessWidget {
 
 
 class DetailMovies extends StatelessWidget {
+
+  final String moviesId;
+  DetailMovies({Key? key, required this.moviesId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // THEME APPLICATION

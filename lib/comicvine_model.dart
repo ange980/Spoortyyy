@@ -34,7 +34,7 @@ class ComicVineSeriesResponse {
 @JsonSerializable()
 class ComicVineMoviesDetailResponse{
   @JsonKey(name: 'results')
-  final List<ComicVineMovieDetail> results;
+  final ComicVineMovieDetail results;
 
   ComicVineMoviesDetailResponse(this.results);
 
@@ -44,6 +44,8 @@ class ComicVineMoviesDetailResponse{
 
   Map<String, dynamic> toJson() => _$ComicVineMoviesDetailResponseToJson(this);
 }
+
+
 
 @JsonSerializable()
 class ComicVineIssuesResponse{
@@ -58,6 +60,31 @@ class ComicVineIssuesResponse{
 
   Map<String, dynamic> toJson() => _$ComicVineIssuesResponseToJson(this);
 }
+
+@JsonSerializable()
+class ComicVineSerieDetailResponse {
+  @JsonKey(name: 'results')
+  final ComicVineSerieDetail results;
+
+  ComicVineSerieDetailResponse(this.results);
+
+  factory ComicVineSerieDetailResponse.fromJson(Map<String, dynamic> json) => _$ComicVineSerieDetailResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ComicVineSerieDetailResponseToJson(this);
+}
+
+@JsonSerializable()
+class ComicVineIssueDetailResponse {
+  @JsonKey(name: 'results')
+  final ComicVineIssueDetail results;
+
+  ComicVineIssueDetailResponse(this.results);
+
+  factory ComicVineIssueDetailResponse.fromJson(Map<String, dynamic> json) => _$ComicVineIssueDetailResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ComicVineIssueDetailResponseToJson(this);
+}
+
 
 
 
@@ -162,6 +189,34 @@ class ComicVineSeries {
   Map<String, dynamic> toJson() => _$ComicVineSeriesToJson(this);
 }
 
+//Informations Details Serie
+@JsonSerializable()
+class ComicVineSerieDetail {
+  @JsonKey(name: 'name')
+  final String name;
+
+  @JsonKey(name: 'deck')
+  final String description;
+
+  @JsonKey(name: 'count_of_episodes')
+  final int nbEpisode;
+
+  @JsonKey(name: 'start_year')
+  final String year;
+
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
+
+  @JsonKey(name: 'publisher')
+  final ComicVinePublisher? publisher;
+
+  ComicVineSerieDetail(this.name, this.description, this.publisher, this.image, this.year,this.nbEpisode);
+
+  factory ComicVineSerieDetail.fromJson(Map<String, dynamic> json) => _$ComicVineSerieDetailFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ComicVineSerieDetailToJson(this);
+}
+
 
 //Informations Page Comics
 @JsonSerializable()
@@ -193,6 +248,25 @@ class ComicVineIssues {
       _$ComicVineIssuesFromJson(json);
 
   Map<String, dynamic> toJson() => _$ComicVineIssuesToJson(this);
+}
+
+//Informations Details Comics
+@JsonSerializable()
+class ComicVineIssueDetail {
+
+  @JsonKey(name: 'id')
+  final int id;
+
+  @JsonKey(name: 'name')
+  final String? name;
+
+
+  ComicVineIssueDetail(this.id,this.name);
+
+  factory ComicVineIssueDetail.fromJson(Map<String, dynamic> json) =>
+      _$ComicVineIssueDetailFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ComicVineIssueDetailToJson(this);
 }
 
 ///RECUP IMAGE  - affichage : Image.network(movie.image!.iconUrl, width: 50, height: 50) : null

@@ -14,13 +14,20 @@ abstract class ComicVineAPI {
   Future<ComicVineMoviesResponse> loadMovies(
       {@Query('limit') int limit = 20});
 
-  @GET('/movie/4000-1')
-  Future<ComicVineMoviesDetailResponse> getMovieDetail(
-      @Path("id") int movieId);
 
   @GET('series_list')
   Future<ComicVineSeriesResponse> loadSeries(
       {@Query('limit') int limit = 20});
+
+  @GET('series/4075-{id}')
+  Future<ComicVineSerieDetailResponse> getSeriesDetail(@Path('id') String serieId );
+
+  @GET('movie/4025-{id}')
+  Future<ComicVineMoviesDetailResponse> getMoviesDetail(@Path('id') String moviesId );
+
+  @GET('issue/4000-{id}')
+  Future<ComicVineIssueDetailResponse> getIssueDetail(@Path('id') String issueId );
+
 
   @GET('issues')
   Future<ComicVineIssuesResponse> loadVolumes(
@@ -58,6 +65,15 @@ class ComicVineRequests {
     }
   }
 
+  Future<ComicVineSerieDetailResponse> getSeriesDetail(String serieId) {
+    try {
+      return _api.getSeriesDetail(serieId);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   Future<ComicVineMoviesResponse> getMovies() {
     try {
       return _api.loadMovies(limit: 20);
@@ -67,9 +83,27 @@ class ComicVineRequests {
     }
   }
 
+  Future<ComicVineMoviesDetailResponse> getMoviesDetail(String moviesId) {
+    try {
+      return _api.getMoviesDetail(moviesId);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   Future<ComicVineIssuesResponse> getVolumes() {
     try {
       return _api.loadVolumes(limit: 20);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<ComicVineIssueDetailResponse> getIssueDetail(String issueId) {
+    try {
+      return _api.getIssueDetail(issueId);
     } catch (e) {
       print(e);
       rethrow;

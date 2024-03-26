@@ -72,18 +72,24 @@ class ComicsPage extends StatelessWidget {
                       itemCount: snapshot.data!.results.length,
                       itemBuilder: (BuildContext context, int index) {
                         final comic = snapshot.data!.results[index];
-                        return Column(
-                          children: [
-                            ComicsWidget(
-                              rank: index + 1,
-                              title: comic.name ?? 'Nom inconnu',
-                              comic: comic.comic?.name ?? 'Nom inconnu',
-                              number: comic.number ?? '1',
-                              date: comic.date ?? '1999',
-                              imageUrl: comic.image?.iconUrl ?? 'URL par défaut',
-                            ),
-                            SizedBox(height: 16.0), // Espace entre chaque série
-                          ],
+                        return InkWell(
+                          onTap: () {
+                            GoRouter.of(context).go('/comicsDetail/${comic.id}');
+                            print(comic.id);
+                          },
+                          child: Column(
+                            children: [
+                              ComicsWidget(
+                                rank: index + 1,
+                                title: comic.name ?? 'Nom inconnu',
+                                comic: comic.comic?.name ?? 'Nom inconnu',
+                                number: comic.number ?? '1',
+                                date: comic.date ?? '1999',
+                                imageUrl: comic.image?.iconUrl ?? 'URL par défaut',
+                              ),
+                              SizedBox(height: 16.0), // Espace entre chaque série
+                            ],
+                          ),
                         );
                       },
                     );
@@ -221,6 +227,10 @@ class ComicsWidget extends StatelessWidget {
 
 
 class DetailComics extends StatelessWidget {
+
+  final String comicsId;
+  DetailComics({Key? key, required this.comicsId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // THEME APPLICATION
