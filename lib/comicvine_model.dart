@@ -126,12 +126,12 @@ class ComicVineMovieDetail {
   final String? name;
 
   @JsonKey(name: 'release_date')
-  final String? releaseDate;
+  final String? date;
 
-  @JsonKey(name: 'runtime')
-  final int budget;
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
 
-  ComicVineMovieDetail(this.id,this.name, this.releaseDate, this.budget);
+  ComicVineMovieDetail(this.id,this.name,this.date, this.image);
 
   factory ComicVineMovieDetail.fromJson(Map<String, dynamic> json) =>
       _$ComicVineMovieDetailFromJson(json);

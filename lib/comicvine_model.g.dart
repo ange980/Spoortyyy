@@ -110,7 +110,9 @@ ComicVineMovieDetail _$ComicVineMovieDetailFromJson(
       json['id'] as int,
       json['name'] as String?,
       json['release_date'] as String?,
-      json['runtime'] as int,
+      json['image'] == null
+          ? null
+          : ComicVineImage.fromJson(json['image'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ComicVineMovieDetailToJson(
@@ -118,8 +120,8 @@ Map<String, dynamic> _$ComicVineMovieDetailToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'release_date': instance.releaseDate,
-      'runtime': instance.budget,
+      'release_date': instance.date,
+      'image': instance.image,
     };
 
 ComicVinePublisher _$ComicVinePublisherFromJson(Map<String, dynamic> json) =>
