@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:blur/blur.dart';
+import 'package:untitled/comicvine_api.dart';
+import 'package:untitled/comicvine_model.dart';
+import 'package:go_router/go_router.dart';
 
 ///COULEURS
 class AppColors {
@@ -44,17 +48,45 @@ class SeriesPage extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding:const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 0.0),
-                child: ListView.builder(
-                  itemCount: 10, // Nombre arbitraire de films à afficher
-                  itemBuilder: (BuildContext context, int index) {
-                    int rank = index + 1;
-                    return Column(
-                      children: [
-                        SeriesWidget(rank),
-                        SizedBox(height: 16.0), // Espace entre chaque film
-                      ],
+                padding: const EdgeInsets.all(16.0),
+                // FutureBuilder pour récupérer les séries depuis l'API
+                child: FutureBuilder<ComicVineSeriesResponse>(
+                  future: ComicVineRequests().getSeries(), // Assurez-vous que cette méthode retourne les bonnes données
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Une erreur est survenue !', style: TextStyle(color: Colors.white));
+                    }
+                    if (!snapshot.hasData || snapshot.data!.results.isEmpty) {
+                      return Text('Aucune série trouvée.', style: TextStyle(color: Colors.white));
+                    }
+                    // ListView pour afficher les séries
+                    return ListView.builder(
+                      itemCount: snapshot.data!.results.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final series = snapshot.data!.results[index];
+                        return InkWell(
+                          onTap: () {
+                            GoRouter.of(context).go('/seriesDetail/${series.id}');
+                            print(series.id);
+                          },
+                          child: Column(
+                            children: [
+                              SeriesWidget(
+                                rank: index + 1,
+                                title: series.name ?? 'Nom inconnu',
+                                imageUrl: series.image?.iconUrl ?? 'URL par défaut',
+                                publisher: 'Marvel',
+                                numberOfEpisodes: series.nbEpisode ?? 22,
+                                date: series.year ?? '1999',
+                              ),
+                              SizedBox(height: 16.0), // Espace entre chaque série
+                            ],
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -69,9 +101,22 @@ class SeriesPage extends StatelessWidget {
 
 
 class SeriesWidget extends StatelessWidget {
+
+  final String title;
+  final String imageUrl;
+  final String publisher;
+  final int numberOfEpisodes;
+  final String date;
   final int rank;
 
-  SeriesWidget(this.rank);
+  SeriesWidget({
+    required this.rank,
+    required this.title,
+    required this.imageUrl,
+    required this.publisher,
+    required this.numberOfEpisodes,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +132,7 @@ class SeriesWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  'assets/svg/img.png',
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.fill,
-                ),
+                child: Image.network(this.imageUrl, width: 128, height: 163, fit: BoxFit.cover) ,
               ),
               SizedBox(width: 16.0),
               Expanded(
@@ -100,7 +140,7 @@ class SeriesWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Titre de la série',
+                      this.title,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17.0,
@@ -137,7 +177,7 @@ class SeriesWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          'Nb épisode',
+                          this.numberOfEpisodes.toString(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,
@@ -156,7 +196,7 @@ class SeriesWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          'Date ',
+                          this.date,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -195,143 +235,171 @@ class SeriesWidget extends StatelessWidget {
 
 ///PAGE DETAILS SERIES
 class DetailSeries extends StatelessWidget {
+
+  final String seriesId;
+  DetailSeries({Key? key, required this.seriesId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // THEME APPLICATION
     return Scaffold(
-      backgroundColor: theme.primaryColor,
-
-      body: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 32.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/image/arrow_cover.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: Theme.of(context).primaryColor,
+      body: FutureBuilder<ComicVineSerieDetailResponse>(
+        future: ComicVineRequests().getSeriesDetail(seriesId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Une erreur est survenue: ${snapshot.error}'));
+          }
+          if (snapshot.hasData) {
+            final detail = snapshot.data!.results;
+            return DefaultTabController(
+              length: 3,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 32.0),
+                        child: Stack(
                           children: [
-                            /// COTE DROIT
-
-                            /// IMAGE SERIE **CHANGER**
-                            Image.asset('assets/image/arrow_cover.jpg'),
-                            SizedBox(width: 24), //Espace icône et texte
-                            ///COTE GAUCHE
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Title Serie',
-                                  style: TextStyle(
-                                    color: AppColors.element,
-                                    fontSize: 24, // Taille de police plus grande
-                                    fontWeight: FontWeight.bold, // Texte en gras
+                            Container(
+                              width: double.infinity, // Prend toute la largeur disponible
+                              height: double.infinity, // Prend toute la hauteur disponible
+                              child: Stack(
+                                children: [
+                                  Image.network(
+                                    detail.image?.iconUrl ?? 'null',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
                                   ),
-                                ),
-                                /// ******REUTILISABLE***** Icone + texte
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/ic_publisher_bicolor.svg',
-                                      color: AppColors.element,
+                                  BackdropFilter(
+                                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0),
                                     ),
-                                    SizedBox(width: 8),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text("Détails pour la série ID: $seriesId"),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                /// COTE DROIT
+
+                                /// IMAGE SERIE **CHANGER**
+                                Image.network(detail.image?.iconUrl?? 'null', width: 128, height: 163, fit: BoxFit.cover),
+                                SizedBox(width: 24), //Espace icône et texte
+                                ///COTE GAUCHE
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                     Text(
-                                      'Title Serie',
+                                      detail.name,
                                       style: TextStyle(
                                         color: AppColors.element,
-                                        fontSize: 16,
+                                        fontSize: 24, // Taille de police plus grande
+                                        fontWeight: FontWeight.bold, // Texte en gras
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/ic_tv_bicolor.svg',
-                                      color: AppColors.element,
+                                    /// ******REUTILISABLE***** Icone + texte
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/svg/ic_publisher_bicolor.svg',
+                                          color: AppColors.element,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          detail.publisher?.name?? 'Marvel',
+                                          style: TextStyle(
+                                            color: AppColors.element,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Number of episode',
-                                      style: TextStyle(
-                                        color: AppColors.element,
-                                        fontSize: 16,
-                                      ),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/svg/ic_tv_bicolor.svg',
+                                          color: AppColors.element,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          '${detail.nbEpisode} épisodes',
+                                          style: TextStyle(
+                                            color: AppColors.element,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/ic_calendar_bicolor.svg',
-                                      color: AppColors.element,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Date',
-                                      style: TextStyle(
-                                        color: AppColors.element,
-                                        fontSize: 16,
-                                      ),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/svg/ic_calendar_bicolor.svg',
+                                          color: AppColors.element,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          detail.year,
+                                          style: TextStyle(
+                                            color: AppColors.element,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ],
                             ),
                           ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
-            TabBar(
-              tabs: [
-                Tab(text: 'Histoire'),
-                Tab(text: 'Personnages'),
-                Tab(text: 'Épisodes'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    ///TEXTE HISTOIRE SERIE
-                    child: Text(
-                      'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
-                          'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
-                          'strange new world of "superheroes" after the "Battle of New York", protecting the public '
-                          'from new and unknown threats.',
-                      style: TextStyle(
-                        color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                  ///LISTE PERSONNAGES
-                  Icon(Icons.people), // Remplacer par le contenu réel
-                  ///LISTE EPISODE
-                  Icon(Icons.list),  // Remplacer par le contenu réel
+                  /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
+                  TabBar(
+                    tabs: [
+                      Tab(text: 'Histoire'),
+                      Tab(text: 'Personnages'),
+                      Tab(text: 'Épisodes'),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          ///TEXTE HISTOIRE SERIE
+                          child: Text(
+                            detail.description,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        ///LISTE PERSONNAGES
+                        Icon(Icons.people), // Remplacer par le contenu réel
+                        ///LISTE EPISODE
+                        Icon(Icons.list),  // Remplacer par le contenu réel
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
+            );
+          } else {
+            return Text('Données non disponibles');
+          }
+        },
       ),
     );
   }

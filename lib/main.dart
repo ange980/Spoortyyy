@@ -33,37 +33,41 @@ final GoRouter _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (BuildContext context, GoRouterState state) => HomePage(),
+      builder: (BuildContext context, GoRouterState state) => MoviesPage(),
     ),
     GoRoute(
       path: '/comics',
       builder: (BuildContext context, GoRouterState state) => ComicsPage(),
-      routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailComics(),
-        ),
-      ],
+    ),
+    GoRoute(
+      path: '/comicsDetail/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = state.pathParameters['id']!;
+        return DetailComics(comicsId: id);
+      },
     ),
     GoRoute(
       path: '/series',
       builder: (BuildContext context, GoRouterState state) => SeriesPage(),
-      routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailComics(),
-        ),
-      ],
+
+    ),
+    GoRoute(
+      path: '/seriesDetail/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = state.pathParameters['id']!;
+        return DetailSeries(seriesId: id);
+      },
     ),
     GoRoute(
       path: '/movies',
       builder: (BuildContext context, GoRouterState state) => MoviesPage(),
-      routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailMovies(),
-        ),
-      ],
+    ),
+    GoRoute(
+      path: '/moviesDetail/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = state.pathParameters['id']!;
+        return DetailMovies(moviesId: id);
+      },
     ),
     GoRoute(
       path: '/search',

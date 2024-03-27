@@ -1,5 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:untitled/comicvine_model.dart';
+import 'package:untitled/comicvine_api.dart';
+import 'package:go_router/go_router.dart';
 
 ///COULEURS
 class AppColors {
@@ -29,7 +34,7 @@ class MoviesPage extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top:40,left: 40,right: 50 ),
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Films les plus populaires',
                   style: TextStyle(
@@ -43,20 +48,45 @@ class MoviesPage extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0, vertical: 0.0),
-                child: ListView.builder(
-                  itemCount: 10, // Nombre arbitraire de films à afficher
-                  itemBuilder: (BuildContext context, int index) {
-                    // Vous pouvez remplacer `10` par le nombre de films que vous voulez afficher
-                    // Calcul du numéro de classement de popularité (index + 1)
-                    int rank = index + 1;
-                    // Création de MovieWidget en passant le numéro de classement
-                    return Column(
-                      children: [
-                        MovieWidget(rank),
-                        SizedBox(height: 16.0), // Espace entre chaque film
-                      ],
+                padding: const EdgeInsets.all(16.0),
+                // FutureBuilder pour récupérer les séries depuis l'API
+                child: FutureBuilder<ComicVineMoviesResponse>(
+                  future: ComicVineRequests().getMovies(), // Assurez-vous que cette méthode retourne les bonnes données
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Une erreur est survenue !', style: TextStyle(color: Colors.white));
+                    }
+                    if (!snapshot.hasData || snapshot.data!.results.isEmpty) {
+                      return Text('Aucune série trouvée.', style: TextStyle(color: Colors.white));
+                    }
+                    // ListView pour afficher les séries
+                    return ListView.builder(
+                      itemCount: snapshot.data!.results.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final movies = snapshot.data!.results[index];
+                        return InkWell(
+                          onTap: () {
+                            GoRouter.of(context).go('/moviesDetail/${movies.id}');
+                            print(movies.id);
+                          },
+                          child: Column(
+                            children: [
+                              MovieWidget(
+                                  rank: index + 1,
+                                  title: movies.name ?? 'Nom inconnu',
+                                  imageUrl: movies.image?.iconUrl ?? 'URL par défaut',
+                                  time: movies.runtime ?? '160',
+                                  date: movies.releaseDate ?? '1999'
+                              ),
+                              SizedBox(height: 16.0), // Espace entre chaque série
+                            ],
+                          ),
+
+                        );
+                      },
                     );
                   },
                 ),
@@ -71,9 +101,20 @@ class MoviesPage extends StatelessWidget {
 
 
 class MovieWidget extends StatelessWidget {
+
+  final String title;
+  final String imageUrl;
+  final String time;
+  final String date;
   final int rank;
 
-  MovieWidget(this.rank);
+  MovieWidget({
+    required this.rank,
+    required this.title,
+    required this.imageUrl,
+    required this.time,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,12 +130,8 @@ class MovieWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  'assets/svg/img.png',
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.fill,
-                ),
+                child:
+                Image.network(this.imageUrl, width: 128, height: 163, fit: BoxFit.cover),
               ),
               SizedBox(width: 16.0),
               Expanded(
@@ -102,7 +139,7 @@ class MovieWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Titre du Film',
+                      this.title,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -120,26 +157,29 @@ class MovieWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          'Note: 4.5',
+                          '${this.time} minutes',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      'Genre: Action',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      'Durée: 120 min',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/svg/ic_calendar_bicolor.svg',
+                          width: 15,
+                          height: 15,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 15.0),
+                        Text(
+                          this.date,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -172,126 +212,156 @@ class MovieWidget extends StatelessWidget {
 
 
 class DetailMovies extends StatelessWidget {
+
+  final String moviesId;
+  DetailMovies({Key? key, required this.moviesId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // THEME APPLICATION
     return Scaffold(
-      backgroundColor: theme.primaryColor,
-
-      body: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 32.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/image/arrow_cover.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          /// COTE DROIT
-                          /// IMAGE SERIE **CHANGER**
-                          Image.asset('assets/image/arrow_cover.jpg'),
-                          SizedBox(width: 24), //Espace icône et texte
-                          ///COTE GAUCHE
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Title Movie',
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 24, // Taille de police plus grande
-                                  fontWeight: FontWeight.bold, // Texte en gras
+      backgroundColor: Theme.of(context).primaryColor,
+      body: FutureBuilder<ComicVineMoviesDetailResponse>(
+        future: ComicVineRequests().getMoviesDetail(moviesId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Une erreur est survenue: ${snapshot.error}'));
+          }
+          if (snapshot.hasData) {
+            final detail = snapshot.data!.results;
+            return DefaultTabController(
+              length: 3,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 32.0),
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: double.infinity, // Prend toute la largeur disponible
+                              height: double.infinity, // Prend toute la hauteur disponible
+                              child: Stack(
+                                children: [
+                                  Image.network(
+                                    detail.image?.iconUrl?? 'null',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                  BackdropFilter(
+                                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                /// COTE DROIT
+                                /// IMAGE SERIE **CHANGER**
+                                Image.network(detail.image?.iconUrl?? 'null', width: 128, height: 163, fit: BoxFit.cover),
+                                SizedBox(width: 24),
+                                ///COTE GAUCHE
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      detail.name?? 'Null',
+                                      style: TextStyle(
+                                        color: AppColors.element,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    /// ******REUTILISABLE***** Icone + texte
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/svg/ic_movie_bicolor.svg',
+                                          color: AppColors.element,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          detail.name?? 'Null',
+                                          style: TextStyle(
+                                            color: AppColors.element,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/svg/ic_calendar_bicolor.svg',
+                                          color: AppColors.element,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                           detail.date?? 'Mai 1999',
+                                          style: TextStyle(
+                                            color: AppColors.element,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              /// ******REUTILISABLE***** Icone + texte
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/svg/ic_movie_bicolor.svg',
-                                    color: AppColors.element,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Title movie',
-                                    style: TextStyle(
-                                      color: AppColors.element,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/svg/ic_calendar_bicolor.svg',
-                                    color: AppColors.element,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Date publication',
-                                    style: TextStyle(
-                                      color: AppColors.element,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
-            TabBar(
-              tabs: [
-                Tab(text: 'Synopsis'),
-                Tab(text: 'Auteurs'),
-                Tab(text: 'Personnages'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    ///TEXTE HISTOIRE SERIE
-                    child: Text(
-                      'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
-                          'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
-                          'strange new world of "superheroes" after the "Battle of New York", protecting the public '
-                          'from new and unknown threats.',
-                      style: TextStyle(
-                        color: Colors.white,
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  ///LISTE PERSONNAGES
-                  Icon(Icons.people), // Remplacer par le contenu réel
-                  ///LISTE EPISODE
-                  Icon(Icons.list),  // Remplacer par le contenu réel
+                  /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
+                  TabBar(
+                    tabs: [
+                      Tab(text: 'Synopsis'),
+                      Tab(text: 'Auteurs'),
+                      Tab(text: 'Personnages'),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          ///TEXTE HISTOIRE SERIE
+                          child: Text(
+                            'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
+                                'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
+                                'strange new world of "superheroes" after the "Battle of New York", protecting the public '
+                                'from new and unknown threats.',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        ///LISTE PERSONNAGES
+                        Icon(Icons.people), // Remplacer par le contenu réel
+                        ///LISTE EPISODE
+                        Icon(Icons.list),  // Remplacer par le contenu réel
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
+            );
+          } else {
+            return Text('Données non disponibles');
+          }
+        },
       ),
     );
   }
