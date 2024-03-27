@@ -33,7 +33,7 @@ final GoRouter _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (BuildContext context, GoRouterState state) => MoviesPage(),
+      builder: (BuildContext context, GoRouterState state) => HomePage(),
     ),
     GoRoute(
       path: '/comics',

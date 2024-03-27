@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:untitled/main.dart';
+import 'package:flutter/painting.dart';
 
 ///PAGE RECHERCHE
 class SearchPage extends StatelessWidget {
@@ -13,13 +14,13 @@ class SearchPage extends StatelessWidget {
       body: Column(
         children: [
           SearchBarContainer(),
-          SizedBox(height: 150),
-          Column(
-            children: [
-              // Espacement pour des raisons de visibilité
+          SizedBox(height: 80),
+
+              SizedBox(height: 100), // Espacement pour des raisons de visibilité
               Container(
-                width: 300,
-                padding: EdgeInsets.all(20),
+                width: 370,
+                height: 120,
+                padding: EdgeInsets.all(25),
                 decoration: BoxDecoration(
                   color: AppColors.cardBackground,
                   borderRadius: BorderRadius.circular(15),
@@ -29,35 +30,24 @@ class SearchPage extends StatelessWidget {
                   children: [
                     Positioned(
                       top: -50,
-                      right: -50, // Positionner l'image à l'extérieur du conteneur
+                      right: 0.5, // Positionner l'image à l'extérieur du conteneur
                       child: SvgPicture.asset(
                         'assets/svg/astronaut.svg',
-                        height: 100,
+                        height: 95,
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
                         Text(
-                          "Titre",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                          "Saisissez une recherche pour \ntrouver un comics, film, série\nou personnage.",
+                          style: TextStyle(fontSize: 15,
+                          color: Colors.blue,
+                          fontFamily: 'Nunito'),
                         ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Description du contenu...",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
             ],
-          ),
-        ],
+
       ),
     );
   }
@@ -114,6 +104,7 @@ class _SearchBarState extends State<SearchBar> {
     return Container(
       height: 45,
       child: TextField(
+        textAlignVertical: TextAlignVertical.bottom ,
       controller: _controller,
       style: TextStyle(color: Colors.white), // Couleur du texte de recherche
       decoration: InputDecoration(
