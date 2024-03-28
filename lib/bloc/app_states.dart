@@ -29,3 +29,17 @@ class SeriesError extends AppState {
 
   SeriesError(this.errorMessage);
 }
+
+class ComicsLoading extends AppState {}
+
+class ComicsLoaded extends AppState {
+  final List<ComicVineSeries> comics;
+
+  ComicsLoaded(this.comics);
+}
+
+class ComicsError extends AppState {
+  final String errorMessage;
+
+  ComicsError(this.errorMessage);
+}

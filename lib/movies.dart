@@ -28,7 +28,7 @@ class AppColors {
 ///BLOC
 class AccueilMovie extends StatelessWidget {
   @override
-  final AppBloc appBloc = AppBloc(ComicVineRequests());
+  final MovieBloc appBloc = MovieBloc(ComicVineRequests());
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => appBloc..add(FetchMovies()),
@@ -46,7 +46,7 @@ class MoviesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<MovieBloc, AppState>(
       builder: (context, state) {
         if (state is MoviesLoading) {
           return Center(child: CircularProgressIndicator());

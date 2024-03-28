@@ -34,7 +34,7 @@ class MovieBloc extends Bloc<AppEvent, AppState> {
       yield ComicsLoading();
       try {
         final comics = await comicVineRequests.getVolumes();
-        yield ComicsLoaded(comics.results);
+        yield ComicsLoaded(comics.results.cast<ComicVineSeries>());
       } catch (e) {
         yield ComicsError('Erreur lors du chargement des comics');
       }
