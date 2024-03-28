@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:go_router/go_router.dart';
 import 'accueil.dart';
 import 'comics.dart';
@@ -148,11 +148,11 @@ class _HomePageState extends State<HomePage> {
       case AppTabs.home:
         return Accueil();
       case AppTabs.comics:
-        return ComicsPage();
+        return AccueilComic();
       case AppTabs.series:
-        return SeriesPage();
+        return AccueilSerie();
       case AppTabs.movies:
-        return MoviesPage();
+        return AccueilMovie();
       case AppTabs.search:
         return SearchPage();
     }

@@ -1,10 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:untitled/bloc/app_events.dart';
 import 'package:untitled/comicvine_api.dart';
 import 'package:untitled/comicvine_model.dart';
 import 'package:go_router/go_router.dart';
+
+import 'bloc/app_bloc.dart';
+import 'bloc/app_states.dart';
 
 ///COULEURS
 class AppColors {
@@ -20,87 +25,97 @@ class AppColors {
   static const Color element = Colors.white;
 }
 
+///BLOC
+class AccueilComic extends StatelessWidget {
+  @override
+  final AppBloc appBloc = AppBloc(ComicVineRequests());
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => appBloc..add(FetchComics()),
+      child: Scaffold(
+
+        body: ComicsPage(),
+      ),
+    );
+  }
+}
+
 ///PAGE LISTE COMICS
 class ComicsPage extends StatelessWidget {
   const ComicsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF15232E),
-      body: Center(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Comics les plus populaires',
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                // FutureBuilder pour récupérer les séries depuis l'API
-                child: FutureBuilder<ComicVineIssuesResponse>(
-                  future: ComicVineRequests().getVolumes(),
-                  builder: (context, snapshot) {
-                    try {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        print(snapshot.error.toString());
-                        return Text('Une erreur est survenue !', style: TextStyle(color: Colors.white));
-                      }
-                      if (!snapshot.hasData || snapshot.data!.results.isEmpty) {
-                        return Text('Aucune série trouvée.', style: TextStyle(color: Colors.white));
-                      }
-                    } catch (error, stacktrace) {
-                      print('Erreur lors de la désérialisation: $error');
-                      print('Stack Trace: $stacktrace');
-                    }
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (context, state) {
+        if (state is ComicsLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is ComicsLoaded) {
+          return _buildComicList(state.comics);
+        } else if (state is ComicsError) {
+          return Center(child: Text('Erreur: ${state.errorMessage3}'));
+        } else {
+          return Center(child: Text('État inconnu'));
+        }
+      },
+    );
+  }
 
-                    // ListView pour afficher les séries
-                    return ListView.builder(
-                      itemCount: snapshot.data!.results.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final comic = snapshot.data!.results[index];
-                        return InkWell(
-                          onTap: () {
-                            GoRouter.of(context).go('/comicsDetail/${comic.id}');
-                            print(comic.id);
-                          },
-                          child: Column(
-                            children: [
-                              ComicsWidget(
-                                rank: index + 1,
-                                title: comic.name ?? 'Nom inconnu',
-                                comic: comic.comic?.name ?? 'Nom inconnu',
-                                number: comic.number ?? '1',
-                                date: comic.date ?? '1999',
-                                imageUrl: comic.image?.iconUrl ?? 'URL par défaut',
-                              ),
-                              SizedBox(height: 16.0), // Espace entre chaque série
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
+  Widget _buildComicList(List<ComicVineIssues> comics){
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF1E3243),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Comics les plus populaires',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
+                textAlign: TextAlign.left,
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: comics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = comics[index];
+                  return InkWell(
+                    onTap: () {
+                      GoRouter.of(context).go('/comicsDetail/${comic.id}');
+                      print(comic.id);
+                    },
+                    child: Column(
+                      children: [
+                        ComicsWidget(
+                          rank: index + 1,
+                          title: comic.name ?? 'Nom inconnu',
+                          comic: comic.comic?.name ?? 'Nom inconnu',
+                          number: comic.number ?? '1',
+                          date: comic.date ?? '1999',
+                          imageUrl: comic.image?.iconUrl ?? 'URL par défaut',
+                        ),
+                        SizedBox(height: 16.0), // Espace entre chaque série
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
