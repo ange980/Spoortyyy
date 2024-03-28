@@ -1,10 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:untitled/bloc/app_states.dart';
 import 'package:untitled/comicvine_api.dart';
 import 'package:untitled/comicvine_model.dart';
 import 'package:go_router/go_router.dart';
+
+import 'bloc/app_bloc.dart';
+import 'bloc/app_events.dart';
 
 ///COULEURS
 class AppColors {
@@ -20,80 +25,97 @@ class AppColors {
   static const Color element = Colors.white;
 }
 
+///BLOC
+class AccueilSerie extends StatelessWidget {
+  @override
+  final AppBloc appBloc = AppBloc(ComicVineRequests());
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => appBloc..add(FetchSeries()),
+      child: Scaffold(
+
+        body: SeriesPage(),
+      ),
+    );
+  }
+}
+
 ///PAGE LISTE SERIES
 class SeriesPage extends StatelessWidget {
   const SeriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF15232E),
-      body: Center(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Séries les plus populaires',
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.left,
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (context, state) {
+        if (state is SeriesLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is SeriesLoaded) {
+          return _buildSerieList(state.series);
+        } else if (state is SeriesError) {
+          return Center(child: Text('Erreur: ${state.errorMessage2}'));
+        } else {
+          return Center(child: Text('État inconnu'));
+        }
+      },
+    );
+  }
+
+  Widget _buildSerieList(List<ComicVineSeries> series){
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF1E3243),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Séries les plus populaires',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
+                textAlign: TextAlign.left,
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                // FutureBuilder pour récupérer les séries depuis l'API
-                child: FutureBuilder<ComicVineSeriesResponse>(
-                  future: ComicVineRequests().getSeries(), // Assurez-vous que cette méthode retourne les bonnes données
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Une erreur est survenue !', style: TextStyle(color: Colors.white));
-                    }
-                    if (!snapshot.hasData || snapshot.data!.results.isEmpty) {
-                      return Text('Aucune série trouvée.', style: TextStyle(color: Colors.white));
-                    }
-                    // ListView pour afficher les séries
-                    return ListView.builder(
-                      itemCount: snapshot.data!.results.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final series = snapshot.data!.results[index];
-                        return InkWell(
-                          onTap: () {
-                            GoRouter.of(context).go('/seriesDetail/${series.id}');
-                            print(series.id);
-                          },
-                          child: Column(
-                            children: [
-                              SeriesWidget(
-                                rank: index + 1,
-                                title: series.name ?? 'Nom inconnu',
-                                imageUrl: series.image?.iconUrl ?? 'URL par défaut',
-                                publisher: 'Marvel',
-                                numberOfEpisodes: series.nbEpisode ?? 22,
-                                date: series.year ?? '1999',
-                              ),
-                              SizedBox(height: 16.0), // Espace entre chaque série
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: series.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final serie = series[index];
+                  return InkWell(
+                    onTap: () {
+                      GoRouter.of(context).go('/seriesDetail/${serie.id}');
+                      print(serie.id);
+                    },
+                    child: Column(
+                      children: [
+                        SeriesWidget(
+                          rank: index + 1,
+                          title: serie.name ?? 'Nom inconnu',
+                          imageUrl: serie.image?.iconUrl ?? 'URL par défaut',
+                          publisher: serie.name?? 'Marvel',
+                          numberOfEpisodes: serie.nbEpisode ?? 22,
+                          date: serie.year ?? '1999',
+                        ),
+                        SizedBox(height: 16.0), // Espace entre chaque série
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -23,7 +23,6 @@ class Accueil extends StatelessWidget {
 
 class MovieListBuilder extends StatelessWidget {
   @override
-
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {

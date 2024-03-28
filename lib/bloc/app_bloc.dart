@@ -21,5 +21,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         yield MoviesError('Erreur lors du chargement des films');
       }
     }
+    if (event is FetchSeries) {
+      yield SeriesLoading();
+      try {
+        final series = await comicVineRequests.getSeries();
+        yield SeriesLoaded(series.results);
+      } catch (e) {
+        yield SeriesError('Erreur lors du chargement des séries');
+      }
+    }
+    if (event is FetchComics) {
+      yield ComicsLoading();
+      try {
+        final comics = await comicVineRequests.getVolumes();
+        yield ComicsLoaded(comics.results);
+      } catch (e) {
+        yield ComicsError('Erreur lors du chargement des comics');
+      }
+    }
   }
+
 }
