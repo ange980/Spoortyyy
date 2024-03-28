@@ -5,10 +5,10 @@ import 'package:untitled/comicvine_api.dart';
 import 'app_events.dart';
 import 'app_states.dart';
 
-class AppBloc extends Bloc<AppEvent, AppState> {
+class MovieBloc extends Bloc<AppEvent, AppState> {
   final ComicVineRequests comicVineRequests;
 
-  AppBloc(this.comicVineRequests) : super(MoviesLoading());
+  MovieBloc(this.comicVineRequests) : super(MoviesLoading());
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {
@@ -17,6 +17,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       try {
         final movies = await comicVineRequests.getMovies();
         yield MoviesLoaded(movies.results);
+      } catch (e) {
+        yield MoviesError('Erreur lors du chargement des films');
+      }
+    }
+  }
+}
+class SerieBloc extends Bloc<AppEvent, AppState> {
+  final ComicVineRequests comicVineRequests;
+
+  SerieBloc(this.comicVineRequests) : super(SeriesLoading());
+
+  @override
+  Stream<AppState> mapEventToState(AppEvent event) async* {
+    if (event is FetchMovies) {
+      yield SeriesLoading();
+      try {
+        final series = await comicVineRequests.getSeries();
+        yield SeriesLoaded(series.results);
       } catch (e) {
         yield MoviesError('Erreur lors du chargement des films');
       }
