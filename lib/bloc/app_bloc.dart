@@ -39,6 +39,44 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         yield ComicsError('Erreur lors du chargement des comics');
       }
     }
+    if (event is FetchCharacter) {
+      yield CharacterLoading();
+      try {
+        final characters = await comicVineRequests.loadCharacter(event.characterId);
+        yield CharacterLoaded(characters.results);
+      } catch (e) {
+        yield ComicsError('Erreur lors du chargement du character');
+      }
+    }
+    if (event is FetchSeriesDetail) {
+      yield SerieDetailLoading();
+      try {
+        final detail = await comicVineRequests.getSeriesDetail(event.serieId);
+        yield SerieDetailLoaded(detail.results);
+      } catch (e) {
+        yield SerieDetailError('Erreur lors du chargement du detail de la serie');
+      }
+    }
+    if (event is FetchMoviesDetail) {
+      yield MovieDetailLoading();
+      try {
+        final detail = await comicVineRequests.getMoviesDetail(event.movieId);
+        yield MovieDetailLoaded(detail.results);
+      } catch (e) {
+        yield MovieDetailError('Erreur lors du chargement du detail du film');
+        print(e);
+      }
+    }
+    if (event is FetchIssueDetail) {
+      yield ComicDetailLoading();
+      try {
+        final detail = await comicVineRequests.getIssueDetail(event.issueId);
+        yield ComicDetailLoaded(detail.results);
+      } catch (e) {
+        yield ComicDetailError('Erreur lors du chargement du detail du comic');
+      }
+    }
+
   }
 
 }

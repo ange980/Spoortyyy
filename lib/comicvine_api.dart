@@ -28,6 +28,8 @@ abstract class ComicVineAPI {
   @GET('issue/4000-{id}')
   Future<ComicVineIssueDetailResponse> getIssueDetail(@Path('id') String issueId );
 
+  @GET('character/4005-{id}')
+  Future<ComicVineCharacterResponse> loadCharacter(@Path('id') String characterId );
 
   @GET('issues')
   Future<ComicVineIssuesResponse> loadVolumes(
@@ -110,8 +112,14 @@ class ComicVineRequests {
     }
   }
 
-
-
+  Future<ComicVineCharacterResponse> loadCharacter(String characterId) {
+    try {
+      return _api.loadCharacter(characterId);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
 }
 

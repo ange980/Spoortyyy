@@ -1,3 +1,4 @@
+import 'package:untitled/bloc/app_events.dart';
 import 'package:untitled/comicvine_model.dart';
 
 abstract class AppState {}
@@ -43,3 +44,60 @@ class ComicsError extends AppState {
 
   ComicsError(this.errorMessage3);
 }
+
+class CharacterLoading extends AppState {}
+
+class CharacterLoaded extends AppState {
+  final ComicVineCharacter characters;
+
+  CharacterLoaded(this.characters);
+}
+
+class CharacterError extends AppState {
+  final String errorMessage4;
+
+  CharacterError(this.errorMessage4);
+}
+
+class MovieDetailLoading extends AppState {}
+
+class MovieDetailLoaded extends AppState {
+  final ComicVineMovieDetail details;
+
+  MovieDetailLoaded(this.details);
+}
+
+class MovieDetailError extends AppState {
+  final String errorMessage5;
+
+  MovieDetailError(this.errorMessage5);
+}
+
+class SerieDetailLoading extends AppState {}
+
+class SerieDetailLoaded extends AppState {
+  final ComicVineSerieDetail details;
+
+   SerieDetailLoaded(this.details);
+}
+
+class SerieDetailError extends AppState {
+  final String errorMessage6;
+
+  SerieDetailError(this.errorMessage6);
+}
+
+class ComicDetailLoading extends AppState {}
+
+class ComicDetailLoaded extends AppState {
+  final ComicVineIssueDetail details;
+
+  ComicDetailLoaded(this.details);
+}
+
+class ComicDetailError extends AppState {
+  final String errorMessage7;
+
+  ComicDetailError(this.errorMessage7);
+}
+

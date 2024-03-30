@@ -154,6 +154,33 @@ class _ComicVineAPI implements ComicVineAPI {
   }
 
   @override
+  Future<ComicVineCharacterResponse> loadCharacter(String characterId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ComicVineCharacterResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'character/4005-${characterId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ComicVineCharacterResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<ComicVineIssuesResponse> loadVolumes({int limit = 20}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};

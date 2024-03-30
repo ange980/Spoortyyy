@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
+import 'Comic/comicDetail.dart';
+import 'Movie/movieDetail.dart';
+import 'Serie/serieDetail.dart';
 import 'accueil.dart';
-import 'comics.dart';
-import 'movies.dart';
+import 'Comic/comics.dart';
+import 'Movie/movies.dart';
 import 'search.dart';
-import 'series.dart';
+import 'Serie/series.dart';
+import 'Character/characters.dart';
 
 /// COULEURS
 class AppColors {
@@ -43,7 +47,7 @@ final GoRouter _router = GoRouter(
       path: '/comicsDetail/:id',
       builder: (BuildContext context, GoRouterState state) {
         final id = state.pathParameters['id']!;
-        return DetailComics(comicsId: id);
+        return AccueilComicDetail(issueId: id,);
       },
     ),
     GoRoute(
@@ -55,7 +59,7 @@ final GoRouter _router = GoRouter(
       path: '/seriesDetail/:id',
       builder: (BuildContext context, GoRouterState state) {
         final id = state.pathParameters['id']!;
-        return DetailSeries(seriesId: id);
+        return AccueilSerieDetail(serieId: id);
       },
     ),
     GoRoute(
@@ -66,7 +70,7 @@ final GoRouter _router = GoRouter(
       path: '/moviesDetail/:id',
       builder: (BuildContext context, GoRouterState state) {
         final id = state.pathParameters['id']!;
-        return DetailMovies(moviesId: id);
+        return AccueilMovieDetail(movieId: id);
       },
     ),
     GoRoute(
