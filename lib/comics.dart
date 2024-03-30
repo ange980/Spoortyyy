@@ -292,10 +292,46 @@ class DetailComics extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ///LISTE PERSONNAGES
-                  Icon(Icons.people), // Remplacer par le contenu réel
-                  ///LISTE EPISODE
-                  Icon(Icons.list),  // Remplacer par le contenu réel
+                  ///LISTE DES AUTEURS
+                  ListView.builder(
+                    itemCount: 4,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage('assets/svg/img.png'),
+                          ),
+                          title: Text(
+                            'Nom de l auteur',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            'Role auteur',
+                            style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  ///LISTE DES PERSONNAGES
+                  ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                      child: ListTile(
+                      leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/svg/img.png'),
+                        ),
+                        title: Text(
+                          'Nom des personnage',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

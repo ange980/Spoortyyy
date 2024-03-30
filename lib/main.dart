@@ -49,7 +49,7 @@ class _BienvenuePage extends State<MyApp> {
     //SeriesPage(),
     //MoviesPage(),
     //SearchPage(),
-    DetailSeries(),
+    DetailComics(),
   ];
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:blur/blur.dart';
 
 ///COULEURS
 class AppColors {
@@ -65,7 +64,6 @@ class SeriesPage extends StatelessWidget {
     );
   }
 }
-
 
 class SeriesWidget extends StatelessWidget {
   final int rank;
@@ -162,7 +160,6 @@ class SeriesWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-
                   ],
                 ),
               ),
@@ -199,7 +196,6 @@ class DetailSeries extends StatelessWidget {
     final theme = Theme.of(context); // THEME APPLICATION
     return Scaffold(
       backgroundColor: theme.primaryColor,
-
       body: DefaultTabController(
         length: 3,
         child: Column(
@@ -222,7 +218,6 @@ class DetailSeries extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-
                           /// COTE DROIT
 
                           /// IMAGE SERIE **CHANGER**
@@ -319,9 +314,9 @@ class DetailSeries extends StatelessWidget {
                     ///TEXTE HISTOIRE SERIE
                     child: Text(
                       'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
-                          'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
-                          'strange new world of "superheroes" after the "Battle of New York", protecting the public '
-                          'from new and unknown threats.',
+                      'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
+                      'strange new world of "superheroes" after the "Battle of New York", protecting the public '
+                      'from new and unknown threats.',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -346,78 +341,81 @@ class DetailSeries extends StatelessWidget {
 
                   ///LISTE EPISODES
 
-                    ListView.builder(
-                    itemCount: 10, // Le nombre d'épisodes que vous souhaitez afficher
+                  ListView.builder(
+                    itemCount: 10,
+                    // Le nombre d'épisodes que vous souhaitez afficher
                     itemBuilder: (BuildContext context, int index) {
-                    // Utilisation de votre widget directement dans ListView.builder
-                    return Container(
-                    decoration: BoxDecoration(
-                    color: Color(0xFF1E3243),
-                    borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    padding: EdgeInsets.all(16.0),
-                    margin: EdgeInsets.all(8.0),
-                    child: Row(
-                    children: [
-                    ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset(
-                    'assets/svg/img.png', // Assurez-vous que ce chemin est correct et que l'image est ajoutée aux assets
-                    width: 100,
-                    height: 150,
-                    fit: BoxFit.fill,
-                    ),
-                    ),
-                    SizedBox(width: 16.0),
-                    Expanded(
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Text(
-                    'Numero de l épisode',
-                    style: TextSt
-                    color: Colors.white,
-                    fontSize: 17.0,
-                    fontWeight: FontWeight.bold,
-                    ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                    'titre de l episode',
-                    style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.normal,
-                    ),
-                    ),
-                    SizedBox(height: 4.0),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/svg/ic_calendar_bicolor.svg',
-                            width: 15,
-                            height: 15,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 5.0), // Ajustez l'espace comme vous le souhaitez
-                          Text(
-                            '24 septembre 2013',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0,
+                      // Utilisation de votre widget directement dans ListView.builder
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF1E3243),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        padding: EdgeInsets.all(16.0),
+                        margin: EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Image.asset(
+                                'assets/svg/img.png',
+                                // Assurez-vous que ce chemin est correct et que l'image est ajoutée aux assets
+                                width: 100,
+                                height: 150,
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      //... (Ajoutez d'autres widgets si nécessaire)
-                    ],
-                    ),
-                    ),
-                    ],
-                    ),
-                    );
+                            SizedBox(width: 16.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Numero de l épisode',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Text(
+                                    'titre de l episode',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/svg/ic_calendar_bicolor.svg',
+                                        width: 15,
+                                        height: 15,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(width: 5.0),
+                                      // Ajustez l'espace comme vous le souhaitez
+                                      Text(
+                                        '24 septembre 2013',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  //... (Ajoutez d'autres widgets si nécessaire)
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     },
-                    ),
+                  ),
                 ],
               ),
             ),
