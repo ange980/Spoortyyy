@@ -219,85 +219,89 @@ class DetailSeries extends StatelessWidget {
                         ),
                       ),
                       Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            /// COTE DROIT
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
 
-                            /// IMAGE SERIE **CHANGER**
-                            Image.asset('assets/image/arrow_cover.jpg'),
-                            SizedBox(width: 24), //Espace icône et texte
-                            ///COTE GAUCHE
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Title Serie',
-                                  style: TextStyle(
+                          /// COTE DROIT
+
+                          /// IMAGE SERIE **CHANGER**
+                          Image.asset('assets/image/arrow_cover.jpg'),
+                          SizedBox(width: 24), //Espace icône et texte
+                          ///COTE GAUCHE
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // To center the Column contents vertically
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Title Serie',
+                                style: TextStyle(
+                                  color: AppColors.element,
+                                  fontSize: 24, // Taille de police plus grande
+                                  fontWeight: FontWeight.bold, // Texte en gras
+                                ),
+                              ),
+
+                              /// ******REUTILISABLE***** Icone + texte
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg/ic_publisher_bicolor.svg',
                                     color: AppColors.element,
-                                    fontSize: 24, // Taille de police plus grande
-                                    fontWeight: FontWeight.bold, // Texte en gras
                                   ),
-                                ),
-                                /// ******REUTILISABLE***** Icone + texte
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/ic_publisher_bicolor.svg',
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Title Serie',
+                                    style: TextStyle(
                                       color: AppColors.element,
+                                      fontSize: 16,
                                     ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Title Serie',
-                                      style: TextStyle(
-                                        color: AppColors.element,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/ic_tv_bicolor.svg',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg/ic_tv_bicolor.svg',
+                                    color: AppColors.element,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Number of episode',
+                                    style: TextStyle(
                                       color: AppColors.element,
+                                      fontSize: 16,
                                     ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Number of episode',
-                                      style: TextStyle(
-                                        color: AppColors.element,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/ic_calendar_bicolor.svg',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg/ic_calendar_bicolor.svg',
+                                    color: AppColors.element,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Date',
+                                    style: TextStyle(
                                       color: AppColors.element,
+                                      fontSize: 16,
                                     ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Date',
-                                      style: TextStyle(
-                                        color: AppColors.element,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
             ),
+
             /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
             TabBar(
               tabs: [
@@ -311,6 +315,7 @@ class DetailSeries extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+
                     ///TEXTE HISTOIRE SERIE
                     child: Text(
                       'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
@@ -322,10 +327,97 @@ class DetailSeries extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   ///LISTE PERSONNAGES
-                  Icon(Icons.people), // Remplacer par le contenu réel
-                  ///LISTE EPISODE
-                  Icon(Icons.list),  // Remplacer par le contenu réel
+                  ListView.builder(
+                    itemCount: 10, //
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/svg/img.png'),
+                        ),
+                        title: Text(
+                          'Nom du personnage',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    },
+                  ),
+
+                  ///LISTE EPISODES
+
+                    ListView.builder(
+                    itemCount: 10, // Le nombre d'épisodes que vous souhaitez afficher
+                    itemBuilder: (BuildContext context, int index) {
+                    // Utilisation de votre widget directement dans ListView.builder
+                    return Container(
+                    decoration: BoxDecoration(
+                    color: Color(0xFF1E3243),
+                    borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    padding: EdgeInsets.all(16.0),
+                    margin: EdgeInsets.all(8.0),
+                    child: Row(
+                    children: [
+                    ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.asset(
+                    'assets/svg/img.png', // Assurez-vous que ce chemin est correct et que l'image est ajoutée aux assets
+                    width: 100,
+                    height: 150,
+                    fit: BoxFit.fill,
+                    ),
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                    child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Text(
+                    'Numero de l épisode',
+                    style: TextSt
+                    color: Colors.white,
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.bold,
+                    ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                    'titre de l episode',
+                    style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.normal,
+                    ),
+                    ),
+                    SizedBox(height: 4.0),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/svg/ic_calendar_bicolor.svg',
+                            width: 15,
+                            height: 15,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 5.0), // Ajustez l'espace comme vous le souhaitez
+                          Text(
+                            '24 septembre 2013',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      //... (Ajoutez d'autres widgets si nécessaire)
+                    ],
+                    ),
+                    ),
+                    ],
+                    ),
+                    );
+                    },
+                    ),
                 ],
               ),
             ),

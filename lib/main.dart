@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'comics.dart';
 import 'search.dart';
 import 'movies.dart';
@@ -27,50 +26,6 @@ class AppColors {
 ///appel API
 //https://comicvine.gamespot.com/api/{nomEndpoint}?api_key={cd0f322e37a01eacb8ec8fe4089d14f5107f4c41}&format=json
 
-/// The route configuration.
-final GoRouter _router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) => HomePage(),
-    ),
-    GoRoute(
-      path: '/comics',
-      builder: (BuildContext context, GoRouterState state) => ComicsPage(),
-      routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailComics(),
-        ),
-      ],
-    ),
-    GoRoute(
-      path: '/series',
-      builder: (BuildContext context, GoRouterState state) => SeriesPage(),
-      routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailComics(),
-        ),
-      ],
-    ),
-    GoRoute(
-      path: '/movies',
-      builder: (BuildContext context, GoRouterState state) => MoviesPage(),
-      routes: [
-        GoRoute(
-          path: 'details',
-          builder: (BuildContext context, GoRouterState state) => DetailMovies(),
-        ),
-      ],
-    ),
-    GoRoute(
-      path: '/search',
-      builder: (BuildContext context, GoRouterState state) => SearchPage(),
-    ),
-  ],
-);
-
 void main() {
   runApp(MyApp());
 }
@@ -82,58 +37,83 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _BienvenuePage();
 }
 
-/// ******NAVBAR******
-/*items: [
-BottomNavigationBarItem(
-icon: SvgPicture.asset(
-'assets/svg/navbar_home.svg',
-color: _selectedIndex == 0 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
-),
-label: 'Accueil',
-),
-BottomNavigationBarItem(
-icon: SvgPicture.asset(
-'assets/svg/navbar_comics.svg',
-color: _selectedIndex == 1 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
-),
-label: 'Comics',
-),
-BottomNavigationBarItem(
-icon: SvgPicture.asset(
-'assets/svg/navbar_series.svg',
-color: _selectedIndex == 2 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
-),
-label: 'Séries',
-),
-BottomNavigationBarItem(
-icon: SvgPicture.asset(
-'assets/svg/navbar_movies.svg',
-color: _selectedIndex == 3 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
-),
-label: 'Films',
-),
-BottomNavigationBarItem(
-icon: SvgPicture.asset(
-'assets/svg/navbar_search.svg',
-color: _selectedIndex == 4 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
-),
-label: 'Recherche',
-),
-],
-*/
 
 ///MON APP REGLAGES
 class _BienvenuePage extends State<MyApp> {
+  int _selectedIndex = 0;
 
+  // Liste de chaque page correspondantes aux onglets (Garder dans l'ordre)
+  final List<Widget> _pages = [
+    //HomePage(),
+    //ComicsPage(),
+    //SeriesPage(),
+    //MoviesPage(),
+    //SearchPage(),
+    DetailSeries(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
+    return MaterialApp(
       theme: ThemeData(
         primaryColor: AppColors.screenBackground,
         useMaterial3: true,
         fontFamily: 'Nunito',
+      ),
+      /// ******NAVBAR******
+      home: Scaffold(
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _pages,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppColors.bottomBarBackground,
+          selectedItemColor: AppColors.bottomBarSelectedText,
+          unselectedItemColor: AppColors.bottomBarUnselectedText,
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_home.svg',
+                color: _selectedIndex == 0 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Accueil',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_comics.svg',
+                color: _selectedIndex == 1 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Comics',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_series.svg',
+                color: _selectedIndex == 2 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Séries',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_movies.svg',
+                color: _selectedIndex == 3 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Films',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/svg/navbar_search.svg',
+                color: _selectedIndex == 4 ? AppColors.bottomBarSelectedText : AppColors.bottomBarUnselectedText,
+              ),
+              label: 'Recherche',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -212,9 +192,18 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     // Votre logique pour "Voir plus"
                   },
-                  child: Text(
-                    'Voir plus',
-                    style: TextStyle(color: Colors.white),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF000000), // Couleur de fond du bouton
+                      borderRadius: BorderRadius.circular(20.0), // Bord arrondi du bouton
+
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    // Espacement interne du bouton, ajustez selon votre design
+                    child: Text(
+                      'Voir plus',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
