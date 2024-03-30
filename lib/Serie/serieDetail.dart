@@ -69,7 +69,6 @@ class DetailSeries extends StatelessWidget {
     );
   }
 
-  @override
   Widget _buildComicList(ComicVineSerieDetail detail){
     return Scaffold(
       backgroundColor: AppColors.cardBackground,
@@ -214,6 +213,7 @@ class DetailSeries extends StatelessWidget {
                       final personnage = detail.characters[index];
                       return InkWell(
                         onTap: () {
+                          GoRouter.of(context).go('/character/${personnage.id}');
                           print(personnage.id);
                         },
                         child: Padding(

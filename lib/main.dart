@@ -77,6 +77,13 @@ final GoRouter _router = GoRouter(
       path: '/search',
       builder: (BuildContext context, GoRouterState state) => SearchPage(),
     ),
+    GoRoute(
+      path: '/character/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = state.pathParameters['id']!;
+        return AccueilCharacter(characterId: id);
+      },
+    ),
   ],
 );
 
