@@ -68,7 +68,6 @@ class MoviesPage extends StatelessWidget {
   }
 }
 
-
 class MovieWidget extends StatelessWidget {
   final int rank;
 
@@ -169,14 +168,12 @@ class MovieWidget extends StatelessWidget {
   }
 }
 
-
 class DetailMovies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // THEME APPLICATION
     return Scaffold(
       backgroundColor: theme.primaryColor,
-
       body: DefaultTabController(
         length: 3,
         child: Column(
@@ -205,7 +202,8 @@ class DetailMovies extends StatelessWidget {
                           SizedBox(width: 24), //Espace icône et texte
                           ///COTE GAUCHE
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // To center the Column contents vertically
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -216,6 +214,7 @@ class DetailMovies extends StatelessWidget {
                                   fontWeight: FontWeight.bold, // Texte en gras
                                 ),
                               ),
+
                               /// ******REUTILISABLE***** Icone + texte
                               Row(
                                 children: [
@@ -258,12 +257,13 @@ class DetailMovies extends StatelessWidget {
                 ),
               ),
             ),
+
             /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
             TabBar(
               tabs: [
                 Tab(text: 'Synopsis'),
-                Tab(text: 'Auteurs'),
                 Tab(text: 'Personnages'),
+                Tab(text: 'Infos'),
               ],
             ),
             Expanded(
@@ -271,21 +271,97 @@ class DetailMovies extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+
                     ///TEXTE HISTOIRE SERIE
                     child: Text(
                       'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
-                          'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
-                          'strange new world of "superheroes" after the "Battle of New York", protecting the public '
-                          'from new and unknown threats.',
+                      'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
+                      'strange new world of "superheroes" after the "Battle of New York", protecting the public '
+                      'from new and unknown threats.',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                   ),
+
                   ///LISTE PERSONNAGES
-                  Icon(Icons.people), // Remplacer par le contenu réel
+                  ListView.builder(
+                    itemCount: 10, //
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                      child: ListTile(
+                      leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/svg/img.png'),
+                        ),
+                        title: Text(
+                          'Nom du personnage',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      );
+                    },
+                  ),
+
                   ///LISTE EPISODE
-                  Icon(Icons.list),  // Remplacer par le contenu réel
+                  ListView.builder(
+                    itemCount: 8,
+                    // Le nombre total d'items que vous souhaitez afficher
+                    itemBuilder: (BuildContext context, int index) {
+                      String titre;
+                      String description;
+                      switch (index) {
+                        case 0:
+                          titre = 'Classification';
+                          description = 'R';
+                          break;
+                        case 1:
+                          titre = 'Réalisateur';
+                          description = 'Nom rea';
+                          break;
+                        case 2:
+                          titre = 'Scénaristes';
+                          description = 'Nom scenariste';
+                          break;
+                        case 3:
+                          titre = 'Producteurs';
+                          description =
+                              'nom des producteur';
+                          break;
+                        case 4:
+                          titre = 'Studio';
+                          description = 'Nom studio';
+                          break;
+                          case 5:
+                          titre = 'Budget';
+                          description = 'Budget';
+                          break;
+                          case 6:
+                          titre = 'Recette au box-office';
+                          description = 'Recette';
+                          break;
+                          case 7:
+                          titre = 'Recette brutes totales';
+                          description = 'Recette';
+                          break;
+                        // Ajoutez d'autres cases si nécessaire.
+                        default:
+                          titre = '';
+                          description = '';
+                      }
+
+                      return ListTile(
+                        title: Text(
+                          titre, // Le titre de l'item
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: Text(
+                          description, // La description de l'item
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    },
+                  )
                 ],
               ),
             ),

@@ -319,7 +319,7 @@ class DetailComics extends StatelessWidget {
                     itemCount: 5,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
-                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                        margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
                       child: ListTile(
                       leading: CircleAvatar(
                           backgroundImage: AssetImage('assets/svg/img.png'),
