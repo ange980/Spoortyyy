@@ -11,6 +11,22 @@ import 'package:go_router/go_router.dart';
 import 'bloc/app_bloc.dart';
 import 'bloc/app_events.dart';
 
+String formatNumberAsMillions(String? numberStr) {
+
+  if (numberStr == null || numberStr.isEmpty) return "null";
+
+  int? number = int.tryParse(numberStr);
+  if (number == null) return "null";
+  double numberInMillions = number / 1000000;
+  if (numberInMillions == numberInMillions.toInt().toDouble()) {
+    return "${numberInMillions.toInt()} millions \$";
+  } else {
+    return "${numberInMillions.toStringAsFixed(2)} millions \$";
+  }
+}
+
+
+
 ///COULEURS
 class AppColors {
   static const Color screenBackground = Color(0xFF15232E);
@@ -371,7 +387,19 @@ class DetailMovies extends StatelessWidget {
                           ),
                         ),
                         ///LISTE PERSONNAGES
-                        Icon(Icons.people), // Remplacer par le contenu réel
+                        Column(
+                          children: [
+                            Text('Producteurs:'),
+                            ...detail.producers.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                            Text('Studios:'),
+                            ...detail.studio.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                            Text('Writers:'),
+                            ...detail.writers.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                            Text('Budget : ${formatNumberAsMillions(detail.budget)} et classe : ${detail.classe}', style: TextStyle(color: Colors.white)),
+                            Text('Recette Box office : ${formatNumberAsMillions(detail.boxOffice)} ', style: TextStyle(color: Colors.white)),
+                            Text('Recette totale : ${formatNumberAsMillions(detail.total)} ', style: TextStyle(color: Colors.white)),
+                          ],
+                        ),
                         ///LISTE EPISODE
                         Icon(Icons.list),  // Remplacer par le contenu réel
                       ],
@@ -388,3 +416,5 @@ class DetailMovies extends StatelessWidget {
     );
   }
 }
+
+

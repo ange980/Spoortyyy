@@ -409,7 +409,12 @@ class DetailSeries extends StatelessWidget {
                           ),
                         ),
                         ///LISTE PERSONNAGES
-                        Icon(Icons.people), // Remplacer par le contenu réel
+                        Column(
+                          children: [
+                            Text('Personnages :'),
+                            ...detail.characters.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                          ],
+                        ),
                         ///LISTE EPISODE
                         Icon(Icons.list),  // Remplacer par le contenu réel
                       ],

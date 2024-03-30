@@ -142,6 +142,13 @@ class ComicsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // Convertir la chaîne de caractères en DateTime
+    DateTime parsedDate = DateTime.parse(this.date);
+
+    // Récupérer l'année en tant que chaîne de caractères
+    String year = parsedDate.year.toString();
+
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF1E3243),
@@ -206,7 +213,7 @@ class ComicsWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          this.date,
+                          year,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -381,10 +388,22 @@ class DetailComics extends StatelessWidget {
                             ),
                           ),
                         ),
+                        ///LISTE AUTEURS
+                        Column(
+                          children: [
+                            Text('Auteur:'),
+                            ...detail.auteurs.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                            Text('Personnages:'),
+                            ...detail.character.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                          ],
+                        ),
                         ///LISTE PERSONNAGES
-                        Icon(Icons.people), // Remplacer par le contenu réel
-                        ///LISTE EPISODE
-                        Icon(Icons.list),  // Remplacer par le contenu réel
+                        Column(
+                          children: [
+                            Text('Personnages:'),
+                            ...detail.character.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
+                          ],
+                        ),
                       ],
                     ),
                   )
