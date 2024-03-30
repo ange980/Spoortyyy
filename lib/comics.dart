@@ -401,11 +401,20 @@ class DetailComics extends StatelessWidget {
                           ],
                         ),
                         ///LISTE PERSONNAGES
-                        Column(
-                          children: [
-                            Text('Personnages:'),
-                            ...detail.character.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                          ],
+                        ListView.builder(
+                          itemCount: detail.character.length,
+                          itemBuilder: (BuildContext context, int index){
+                            final personnage = detail.character[index];
+                            return InkWell(
+                              onTap: () {
+                                print(personnage.id);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(personnage.name, style: TextStyle(color: Colors.white)),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

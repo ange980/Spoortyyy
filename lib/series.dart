@@ -91,6 +91,7 @@ class SeriesPage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: series.length,
                 itemBuilder: (BuildContext context, int index) {
+
                   final serie = series[index];
                   return InkWell(
                     onTap: () {
@@ -411,11 +412,20 @@ class DetailSeries extends StatelessWidget {
                           ),
                         ),
                         ///LISTE PERSONNAGES
-                        Column(
-                          children: [
-                            Text('Personnages :'),
-                            ...detail.characters.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                          ],
+                        ListView.builder(
+                          itemCount: detail.characters.length,
+                          itemBuilder: (BuildContext context, int index){
+                            final personnage = detail.characters[index];
+                            return InkWell(
+                              onTap: () {
+                                print(personnage.id);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(personnage.name, style: TextStyle(color: Colors.white)),
+                              ),
+                            );
+                          },
                         ),
                         ///LISTE EPISODE
                         Icon(Icons.list),  // Remplacer par le contenu réel

@@ -128,6 +128,9 @@ ComicVineMovieDetail _$ComicVineMovieDetailFromJson(
       json['budget'] as String?,
       json['box_office_revenue'] as String?,
       json['description'] as String?,
+      (json['characters'] as List<dynamic>)
+          .map((e) => ComicVineCharacters.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ComicVineMovieDetailToJson(
@@ -146,6 +149,7 @@ Map<String, dynamic> _$ComicVineMovieDetailToJson(
       'writers': instance.writers,
       'studios': instance.studio,
       'producers': instance.producers,
+      'characters': instance.characters,
     };
 
 ComicVinePublisher _$ComicVinePublisherFromJson(Map<String, dynamic> json) =>
@@ -206,7 +210,7 @@ ComicVineSerieDetail _$ComicVineSerieDetailFromJson(
       json['start_year'] as String,
       json['count_of_episodes'] as int,
       (json['characters'] as List<dynamic>)
-          .map((e) => ComicVinePerso.fromJson(e as Map<String, dynamic>))
+          .map((e) => ComicVineCharacters.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -263,7 +267,7 @@ ComicVineIssueDetail _$ComicVineIssueDetailFromJson(
       (json['person_credits'] as List<dynamic>)
           .map((e) => ComicVineAuteur.fromJson(e as Map<String, dynamic>))
           .toList(),
-      (json['concept_credits'] as List<dynamic>)
+      (json['character_credits'] as List<dynamic>)
           .map((e) => ComicVineCharacters.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -279,7 +283,7 @@ Map<String, dynamic> _$ComicVineIssueDetailToJson(
       'image': instance.image,
       'description': instance.description,
       'person_credits': instance.auteurs,
-      'concept_credits': instance.character,
+      'character_credits': instance.character,
     };
 
 ComicVineImage _$ComicVineImageFromJson(Map<String, dynamic> json) =>
@@ -305,21 +309,13 @@ Map<String, dynamic> _$ComicVineComicToJson(ComicVineComic instance) =>
 ComicVineCharacters _$ComicVineCharactersFromJson(Map<String, dynamic> json) =>
     ComicVineCharacters(
       json['name'] as String,
+      json['id'] as int,
     );
 
 Map<String, dynamic> _$ComicVineCharactersToJson(
         ComicVineCharacters instance) =>
     <String, dynamic>{
-      'name': instance.name,
-    };
-
-ComicVinePerso _$ComicVinePersoFromJson(Map<String, dynamic> json) =>
-    ComicVinePerso(
-      json['name'] as String,
-    );
-
-Map<String, dynamic> _$ComicVinePersoToJson(ComicVinePerso instance) =>
-    <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
     };
 

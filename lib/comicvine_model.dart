@@ -85,9 +85,6 @@ class ComicVineIssueDetailResponse {
   Map<String, dynamic> toJson() => _$ComicVineIssueDetailResponseToJson(this);
 }
 
-
-
-
 //Informations Page Film
 @JsonSerializable()
 class ComicVineMovie {
@@ -158,8 +155,11 @@ class ComicVineMovieDetail {
   @JsonKey(name: 'producers')
   final List<ComicVineProducers> producers;
 
+  @JsonKey(name: 'characters')
+  final List<ComicVineCharacters> characters;
 
-  ComicVineMovieDetail(this.id,this.name,this.date, this.image, this.producers, this.writers,this.studio, this.classe,this.total,this.distributeur,this.budget,this.boxOffice,this.description);
+
+  ComicVineMovieDetail(this.id,this.name,this.date, this.image, this.producers, this.writers,this.studio, this.classe,this.total,this.distributeur,this.budget,this.boxOffice,this.description,this.characters);
 
   factory ComicVineMovieDetail.fromJson(Map<String, dynamic> json) =>
       _$ComicVineMovieDetailFromJson(json);
@@ -241,7 +241,7 @@ class ComicVineSerieDetail {
   final ComicVinePublisher? publisher;
 
   @JsonKey(name: 'characters')
-  final List<ComicVinePerso> characters;
+  final List<ComicVineCharacters> characters;
 
   ComicVineSerieDetail(this.name, this.description, this.publisher, this.image, this.year,this.nbEpisode, this.characters);
 
@@ -272,7 +272,6 @@ class ComicVineIssues {
 
   @JsonKey(name: 'image')
   final ComicVineImage? image;
-
 
 
   ComicVineIssues(this.id,this.name, this.number,this.image,this.comic,this.date);
@@ -311,7 +310,7 @@ class ComicVineIssueDetail {
   @JsonKey(name: 'person_credits')
   final List<ComicVineAuteur> auteurs;
 
-  @JsonKey(name: 'concept_credits')
+  @JsonKey(name: 'character_credits')
   final List<ComicVineCharacters> character;
 
   ComicVineIssueDetail(this.id,this.name,this.number,this.comic, this.date,this.image, this.description, this.auteurs, this.character);
@@ -349,25 +348,15 @@ class ComicVineComic {
 @JsonSerializable()
 class ComicVineCharacters {
 
+  @JsonKey(name: 'id')
+  final int id;
+
   @JsonKey(name: 'name')
   final String name;
 
-  ComicVineCharacters(this.name);
+  ComicVineCharacters(this.name,this.id);
 
   factory ComicVineCharacters.fromJson(Map<String, dynamic> json) => _$ComicVineCharactersFromJson(json);
-}
-
-
-///RECUP PERSO
-@JsonSerializable()
-class ComicVinePerso {
-
-  @JsonKey(name: 'name')
-  final String name;
-
-  ComicVinePerso(this.name);
-
-  factory ComicVinePerso.fromJson(Map<String, dynamic> json) => _$ComicVinePersoFromJson(json);
 }
 
 ///RECUP AUTEURS

@@ -371,8 +371,8 @@ class DetailMovies extends StatelessWidget {
                   TabBar(
                     tabs: [
                       Tab(text: 'Synopsis'),
-                      Tab(text: 'Auteurs'),
                       Tab(text: 'Personnages'),
+                      Tab(text: 'Infos'),
                     ],
                   ),
                   Expanded(
@@ -391,7 +391,25 @@ class DetailMovies extends StatelessWidget {
                             ),
                           ),
                         ),
-                        ///LISTE PERSONNAGES
+
+                        ///LISTE Personnage
+                        ListView.builder(
+                          itemCount: detail.characters.length,
+                          itemBuilder: (BuildContext context, int index){
+                            final personnage = detail.characters[index];
+                            return InkWell(
+                              onTap: () {
+                                print(personnage.id);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(personnage.name, style: TextStyle(color: Colors.white)),
+                              ),
+                            );
+                          },
+                        ),
+
+                        ///DETAILS
                         Column(
                           children: [
                             Text('Producteurs:'),
@@ -405,8 +423,6 @@ class DetailMovies extends StatelessWidget {
                             Text('Recette totale : ${formatNumberAsMillions(detail.total)} ', style: TextStyle(color: Colors.white)),
                           ],
                         ),
-                        ///LISTE EPISODE
-                        Icon(Icons.list),  // Remplacer par le contenu réel
                       ],
                     ),
                   ),
