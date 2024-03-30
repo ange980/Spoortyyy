@@ -282,39 +282,40 @@ class DetailSeries extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 32.0),
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: double.infinity, // Prend toute la largeur disponible
-                              height: double.infinity, // Prend toute la hauteur disponible
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    detail.image?.iconUrl ?? 'null',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity, // Prend toute la largeur disponible
+                            height: double.infinity, // Prend toute la hauteur disponible
+                            child: Stack(
+                              children: [
+                                Image.network(
+                                  detail.image?.iconUrl ?? 'null',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                                BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0),
                                   ),
-                                  BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                    child: Container(
-                                      color: Colors.black.withOpacity(0),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            Text("Détails pour la série ID: $seriesId"),
-                            Row(
+                          ),
+                          Padding(
+                            padding:const EdgeInsets.only(left: 32.0),
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 /// COTE DROIT
-
-                                /// IMAGE SERIE **CHANGER**
-                                Image.network(detail.image?.iconUrl?? 'null', width: 128, height: 163, fit: BoxFit.cover),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child:
+                                  Image.network(detail.image?.iconUrl?? 'null', width: 128, height: 163, fit: BoxFit.cover),
+                                ),
                                 SizedBox(width: 24), //Espace icône et texte
                                 ///COTE GAUCHE
                                 Column(
@@ -382,8 +383,9 @@ class DetailSeries extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+
+                        ],
                       ),
                     ),
                   ),
