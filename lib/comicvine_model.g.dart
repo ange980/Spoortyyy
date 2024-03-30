@@ -364,12 +364,16 @@ ComicVineAuteur _$ComicVineAuteurFromJson(Map<String, dynamic> json) =>
     ComicVineAuteur(
       json['name'] as String,
       json['role'] as String,
+      json['image'] == null
+          ? null
+          : ComicVineImage.fromJson(json['image'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ComicVineAuteurToJson(ComicVineAuteur instance) =>
     <String, dynamic>{
       'name': instance.name,
       'role': instance.role,
+      'image': instance.image,
     };
 
 ComicVineWriters _$ComicVineWritersFromJson(Map<String, dynamic> json) =>

@@ -422,7 +422,11 @@ class ComicVineAuteur {
   @JsonKey(name: 'role')
   final String role;
 
-  ComicVineAuteur(this.name,this.role);
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
+
+
+  ComicVineAuteur(this.name,this.role, this.image);
 
   factory ComicVineAuteur.fromJson(Map<String, dynamic> json) => _$ComicVineAuteurFromJson(json);
 }

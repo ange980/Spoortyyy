@@ -218,28 +218,47 @@ class DetailMovies extends StatelessWidget {
                         onTap: () {
                           GoRouter.of(context).go('/character/${personnage.id}');
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(personnage.name, style: TextStyle(color: Colors.white)),
-                        ),
+                        child: Container(
+                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              child: ClipOval(
+                                child: Image.network(
+                                  'null',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              personnage.name,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
                       );
                     },
                   ),
 
                   ///DETAILS
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Alignez le texte à gauche
                     children: [
-                      Text('Producteurs:'),
-                      ...detail.producers.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                      Text('Studios:'),
-                      ...detail.studio.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                      Text('Writers:'),
-                      ...detail.writers.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                      Text('Budget : ${formatNumberAsMillions(detail.budget)} et classe : ${detail.classe}', style: TextStyle(color: Colors.white)),
-                      Text('Recette Box office : ${formatNumberAsMillions(detail.boxOffice)} ', style: TextStyle(color: Colors.white)),
-                      Text('Recette totale : ${formatNumberAsMillions(detail.total)} ', style: TextStyle(color: Colors.white)),
+                      buildInfoRow('Classification', 'R' ?? 'Inconnu'),
+                      if (detail.writers.isNotEmpty)
+                        buildInfoSection('Scénaristes', detail.writers.map((writer) => writer.name).toList()),
+                      if (detail.producers.isNotEmpty)
+                        buildInfoSection('Producteurs', detail.producers.map((producer) => producer.name).toList()),
+                      if (detail.studio.isNotEmpty)
+                        buildInfoSection('Studios', detail.studio.map((studio) => studio.name).toList()),
+                      buildInfoRow('Budget', formatNumberAsMillions(detail.budget) ?? 'Inconnu'),
+
+                      buildInfoRow('Recettes au box-office', formatNumberAsMillions(detail.boxOffice)),
+                      buildInfoRow('Recette brutes totales',formatNumberAsMillions(detail.total)),
                     ],
-                  ),
+                  )
+
                 ],
               ),
             ),
@@ -248,6 +267,54 @@ class DetailMovies extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildInfoRow(String title, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+    child: Row(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Spacer(), // Cela crée un espace entre les éléments de la rangée
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.right, // Alignez le texte à droite pour les valeurs
+            style: TextStyle(color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget buildInfoSection(String title, List<String> names) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+    child: Row(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Spacer(),
+        for (var name in names)
+          Text(
+            name,
+            style: TextStyle(color: Colors.white),
+          ),
+      ],
+    ),
+  );
 }
 
 

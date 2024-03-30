@@ -216,10 +216,25 @@ class DetailSeries extends StatelessWidget {
                           GoRouter.of(context).go('/character/${personnage.id}');
                           print(personnage.id);
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(personnage.name, style: TextStyle(color: Colors.white)),
-                        ),
+                          child: Container(
+                            margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: ClipOval(
+                                  child: Image.network(
+                                    'null',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                personnage.name,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
                       );
                     },
                   ),

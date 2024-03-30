@@ -88,7 +88,7 @@ class Character extends StatelessWidget {
               child: Center(
                 child: Stack(
                   children: [
-                   /* Container(
+                    Container(
                       width: double.infinity, // Prend toute la largeur disponible
                       height: double.infinity, // Prend toute la hauteur disponible
                       child: Stack(
@@ -107,7 +107,7 @@ class Character extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),*/
+                    ),
                     Padding(
                       padding:const EdgeInsets.only(left: 32.0),
                       child: Row(
@@ -165,18 +165,16 @@ class Character extends StatelessWidget {
                   ),
                   ///INFOS
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Alignez le texte à gauche
                     children: [
-
-                      Text('Createur:'),
-                      ...character.createur.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                      Text('Nom : ${character.name}', style: TextStyle(color: Colors.white)),
-                      Text('Vrai Nom : ${character.realName} ', style: TextStyle(color: Colors.white)),
-                      Text('Aliases : ${character.aliases} ', style: TextStyle(color: Colors.white)),
-                      Text('Genre ${gender(character.gender)} ', style: TextStyle(color: Colors.white)),
-                      Text('Date de naissance ${character.birthday}', style: TextStyle(color: Colors.white)),
-
+                      buildInfoRow('Nom super-héros', character.name ?? 'Inconnu'),
+                      buildInfoRow('Nom réel', character.realName ?? 'Inconnu'),
+                      buildInfoRow('Aliases', character.aliases ?? 'Inconnu'),
+                      ...character.createur.map((creator) => buildInfoRow('Créateur', creator.name)),
+                      buildInfoRow('Genre', gender(character.gender)),
+                      buildInfoRow('Date de naissance', character.birthday ?? 'Inconnu'),
                     ],
-                  ),
+                  )
                 ],
               ),
             )
@@ -185,6 +183,32 @@ class Character extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildInfoRow(String title, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+    child: Row(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Spacer(), // Cela crée un espace entre les éléments de la rangée
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.right, // Alignez le texte à droite pour les valeurs
+            style: TextStyle(color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 

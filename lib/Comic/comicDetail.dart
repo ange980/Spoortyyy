@@ -193,14 +193,29 @@ class DetailComics extends StatelessWidget {
                     ),
                   ),
                   ///LISTE AUTEURS
-                  Column(
-                    children: [
-                      Text('Auteur:'),
-                      ...detail.auteurs.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                      Text('Personnages:'),
-                      ...detail.character.map((producer) => Text(producer.name, style: TextStyle(color: Colors.white))).toList(),
-                    ],
+                  ListView.builder(
+                    itemCount: detail.auteurs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final auteur = detail.auteurs[index];
+                      return Container(
+                        margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage('assets/svg/img.png'),
+                          ),
+                          title: Text(
+                            auteur.name,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            auteur.role,
+                            style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      );
+                    },
                   ),
+
                   ///LISTE PERSONNAGES
                   ListView.builder(
                     itemCount: detail.character.length,
@@ -211,10 +226,25 @@ class DetailComics extends StatelessWidget {
                           GoRouter.of(context).go('/character/${personnage.id}');
                           print(personnage.id);
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(personnage.name, style: TextStyle(color: Colors.white)),
-                        ),
+                          child: Container(
+                            margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: ClipOval(
+                                  child: Image.network(
+                                    'null',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                personnage.name,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
                       );
                     },
                   ),
