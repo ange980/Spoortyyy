@@ -14,12 +14,12 @@ class SerieListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SerieBloc, AppState>(
       builder: (context, state) {
-        if (state is SeriesLoadingState) {
+        if (state is SeriesLoading) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is SeriesLoadedState) {
+        } else if (state is SeriesLoaded) {
           return _buildSerieList(state.series);
-        } else if (state is AppErrorState) {
-          return Center(child: Text('Erreur: ${state.errorMessage}'));
+        } else if (state is SeriesError) {
+          return Center(child: Text('Erreur: ${state.errorMessage2}'));
         } else {
           return Center(child: Text('État inconnu'));
         }

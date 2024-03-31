@@ -48,11 +48,11 @@ class SeriesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
-        if (state is AppLoadingState) {
+        if (state is SeriesLoading) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is SeriesLoadedState) {
+        } else if (state is SeriesLoaded) {
           return _buildSerieList(state.series);
-        } else if (state is AppErrorState) {
+        } else if (state is SeriesError) {
           return Center(child: Text('Erreur: '));
         } else {
           return Center(child: Text('État inconnu'));

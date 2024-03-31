@@ -110,6 +110,44 @@ Map<String, dynamic> _$ComicVineEpisodeResponseToJson(
       'results': instance.results,
     };
 
+ComicVineSearchResponse _$ComicVineSearchResponseFromJson(
+        Map<String, dynamic> json) =>
+    ComicVineSearchResponse(
+      (json['results'] as List<dynamic>)
+          .map((e) => ComicVineSearch.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ComicVineSearchResponseToJson(
+        ComicVineSearchResponse instance) =>
+    <String, dynamic>{
+      'results': instance.results,
+    };
+
+ComicVineSearch _$ComicVineSearchFromJson(Map<String, dynamic> json) =>
+    ComicVineSearch(
+      json['id'] as int,
+      json['name'] as String?,
+      json['issuenumber'] as String?,
+      json['image'] == null
+          ? null
+          : ComicVineImage.fromJson(json['image'] as Map<String, dynamic>),
+      json['volume'] == null
+          ? null
+          : ComicVineComic.fromJson(json['volume'] as Map<String, dynamic>),
+      json['cover_date'] as String?,
+    );
+
+Map<String, dynamic> _$ComicVineSearchToJson(ComicVineSearch instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'issuenumber': instance.number,
+      'cover_date': instance.date,
+      'volume': instance.comic,
+      'image': instance.image,
+    };
+
 ComicVineMovie _$ComicVineMovieFromJson(Map<String, dynamic> json) =>
     ComicVineMovie(
       json['id'] as int,

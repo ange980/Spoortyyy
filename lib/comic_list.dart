@@ -14,12 +14,12 @@ class ComicListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ComicBloc, AppState>(
       builder: (context, state) {
-        if (state is ComicsLoadingState) {
+        if (state is ComicsLoading) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is ComicsLoadedState) {
+        } else if (state is ComicsLoaded) {
           return _buildComicList(state.comics.cast<ComicVineIssues>());
-        } else if (state is AppErrorState) {
-          return Center(child: Text('Erreur: ${state.errorMessage}'));
+        } else if (state is ComicsError) {
+          return Center(child: Text('Erreur: ${state.errorMessage3}'));
         } else {
           return Center(child: Text('État inconnu'));
         }

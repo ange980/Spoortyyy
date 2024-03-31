@@ -14,11 +14,11 @@ class MovieListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
-        if (state is MoviesLoadingState) {
+        if (state is MoviesLoading) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is MoviesLoadedState) {
+        } else if (state is MoviesLoaded) {
           return _buildMovieList(state.movies);
-        } else if (state is AppErrorState) {
+        } else if (state is MoviesError) {
           return Center(child: Text('Erreur: ${state.errorMessage}'));
         } else {
           return Center(child: Text('État inconnu'));

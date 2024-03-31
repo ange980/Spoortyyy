@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:untitled/bloc/app_events.dart';
 import 'package:untitled/comicvine_model.dart';
 
@@ -101,3 +102,24 @@ class ComicDetailError extends AppState {
   ComicDetailError(this.errorMessage7);
 }
 
+class SearchState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class SearchInitial extends SearchState {}
+
+class SearchLoadInProgress extends SearchState {}
+
+class SearchLoadSuccess extends SearchState {
+
+  final List<ComicVineSearch> searchIssueResults;
+  SearchLoadSuccess({
+    required this.searchIssueResults,
+  });
+
+  @override
+  List<Object?> get props => [searchIssueResults];
+}
+
+class SearchLoadFailure extends SearchState {}

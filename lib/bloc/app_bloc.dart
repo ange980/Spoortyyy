@@ -5,6 +5,64 @@ import 'package:untitled/comicvine_api.dart';
 import 'app_events.dart';
 import 'app_states.dart';
 
+class SerieBloc extends Bloc<AppEvent, AppState> {
+  final ComicVineRequests comicVineRequests;
+
+  SerieBloc(this.comicVineRequests) : super(SeriesLoading());
+
+  @override
+  Stream<AppState> mapEventToState(AppEvent event) async* {
+    if (event is FetchSeries) {
+      yield SeriesLoading();
+      try {
+        final series = await comicVineRequests.getSeries();
+        yield SeriesLoaded(series.results);
+      } catch (e) {
+        yield SeriesError('Erreur lors du chargement des films');
+      }
+    }
+  }
+}
+class ComicBloc extends Bloc<AppEvent, AppState> {
+  final ComicVineRequests comicVineRequests;
+
+  ComicBloc(this.comicVineRequests) : super(ComicsLoading());
+
+  @override
+  Stream<AppState> mapEventToState(AppEvent event) async* {
+    if (event is FetchComics) {
+      yield ComicsLoading();
+      try {
+        final comics = await comicVineRequests.getVolumes();
+        yield ComicsLoaded(comics.results);
+      } catch (e) {
+        yield ComicsError('Erreur lors du chargement des films');
+      }
+    }
+  }
+}
+class SearchBloc extends Bloc< AppEvent, SearchState> {
+  final ComicVineRequests search;
+
+  SearchBloc(this.search) : super(SearchInitial());
+
+  @override
+  Stream<SearchState> mapEventToState(AppEvent event) async* {
+    if (event is SearchRequested) {
+
+      yield SearchLoadInProgress();
+      try {
+        final searchResults = await search.searchIssue(event.value);
+        yield SearchLoadSuccess(
+          searchIssueResults: searchResults.results,
+        );
+      } catch (_) {
+        yield SearchLoadFailure();
+      }
+    }
+  }
+}
+
 class AppBloc extends Bloc<AppEvent, AppState> {
   final ComicVineRequests comicVineRequests;
 

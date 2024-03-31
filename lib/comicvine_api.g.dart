@@ -208,41 +208,14 @@ class _ComicVineAPI implements ComicVineAPI {
   }
 
   @override
-  Future<ComicVineIssuesResponse> loadVolumes({int limit = 20}) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ComicVineIssuesResponse>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              'issues',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = ComicVineIssuesResponse.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
   Future<ComicVineSearchResponse> searchIssue(
-    String search, {
-     String? input,
-    int limit = 10,
-  }) async {
+    String search,
+    String input,
+    int limit,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'search': search,
+      r'query': search,
       r'ressources': input,
       r'limit': limit,
     };
@@ -266,6 +239,33 @@ class _ComicVineAPI implements ComicVineAPI {
               baseUrl,
             ))));
     final value = ComicVineSearchResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ComicVineIssuesResponse> loadVolumes({int limit = 20}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'limit': limit};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ComicVineIssuesResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'issues',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ComicVineIssuesResponse.fromJson(_result.data!);
     return value;
   }
 

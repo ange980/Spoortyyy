@@ -35,6 +35,10 @@ abstract class ComicVineAPI {
   @GET('character/4005-{id}')
   Future<ComicVineCharacterResponse> loadCharacter(@Path('id') String characterId );
 
+  @GET('search')
+  Future<ComicVineSearchResponse> searchIssue(@Query('query')String search,
+      @Query('ressources') String input, @Query('limit') int limit );
+
   @GET('issues')
   Future<ComicVineIssuesResponse> loadVolumes(
       {@Query('limit') int limit = 20});
@@ -134,5 +138,22 @@ class ComicVineRequests {
     }
   }
 
+  Future<ComicVineSearchResponse> searchIssue(String search) {
+    try {
+      return _api.searchIssue(search,'issue',10);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+  Future<ComicVineSearchResponse> searchCharacter(String search) {
+    try {
+      return _api.searchIssue(search,'character',10);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 }
+
 
