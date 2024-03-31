@@ -134,12 +134,19 @@ class _HomePageState extends State<HomePage> {
               ),
 
               child: BottomNavigationBar(
-                backgroundColor: Colors.transparent,
+                backgroundColor: AppColors.bottomBarBackground,
                 currentIndex: _currentTabPosition,
                 type: BottomNavigationBarType.fixed,
+                selectedItemColor: Colors.white, // Icônes toujours blanches même quand sélectionnées
+                unselectedItemColor: Colors.white, // Icônes toujours blanches même quand non sélectionnées
                 items: AppTabs.values
-                    .map((tab) =>
-                    BottomNavigationBarItem(label: tab.label, icon: Icon(tab.icon)))
+                    .map((tab) => BottomNavigationBarItem(
+                  label: tab.label,
+                  icon: Icon(
+                    tab.icon,
+                    color: Colors.grey, // Définit explicitement la couleur de l'icône
+                  ),
+                ))
                     .toList(growable: false),
                 onTap: (int position) {
                   setState(() {
