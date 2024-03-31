@@ -96,6 +96,20 @@ Map<String, dynamic> _$ComicVineIssueDetailResponseToJson(
       'results': instance.results,
     };
 
+ComicVineEpisodeResponse _$ComicVineEpisodeResponseFromJson(
+        Map<String, dynamic> json) =>
+    ComicVineEpisodeResponse(
+      (json['results'] as List<dynamic>)
+          .map((e) => ComicVineEpisode.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ComicVineEpisodeResponseToJson(
+        ComicVineEpisodeResponse instance) =>
+    <String, dynamic>{
+      'results': instance.results,
+    };
+
 ComicVineMovie _$ComicVineMovieFromJson(Map<String, dynamic> json) =>
     ComicVineMovie(
       json['id'] as int,
@@ -139,7 +153,7 @@ ComicVineMovieDetail _$ComicVineMovieDetailFromJson(
       json['distributor'] as String?,
       json['budget'] as String?,
       json['box_office_revenue'] as String?,
-      json['description'] as String?,
+      json['deck'] as String?,
       (json['characters'] as List<dynamic>)
           .map((e) => ComicVinePerso.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -155,7 +169,7 @@ Map<String, dynamic> _$ComicVineMovieDetailToJson(
       'total_revenue': instance.total,
       'box_office_revenue': instance.boxOffice,
       'budget': instance.budget,
-      'description': instance.description,
+      'deck': instance.description,
       'distributor': instance.distributeur,
       'rating': instance.classe,
       'writers': instance.writers,
@@ -179,6 +193,26 @@ Map<String, dynamic> _$ComicVinePublisherToJson(ComicVinePublisher instance) =>
       'api_detail_url': instance.apiDetailUrl,
       'id': instance.id,
       'name': instance.name,
+      'image': instance.image,
+    };
+
+ComicVineEpisode _$ComicVineEpisodeFromJson(Map<String, dynamic> json) =>
+    ComicVineEpisode(
+      json['id'] as int,
+      json['name'] as String,
+      json['image'] == null
+          ? null
+          : ComicVineImage.fromJson(json['image'] as Map<String, dynamic>),
+      json['episode_number'] as String,
+      json['air_date'] as String,
+    );
+
+Map<String, dynamic> _$ComicVineEpisodeToJson(ComicVineEpisode instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'episode_number': instance.number,
+      'air_date': instance.date,
       'image': instance.image,
     };
 
@@ -211,7 +245,7 @@ ComicVineSerieDetail _$ComicVineSerieDetailFromJson(
         Map<String, dynamic> json) =>
     ComicVineSerieDetail(
       json['name'] as String,
-      json['description'] as String,
+      json['deck'] as String,
       json['publisher'] == null
           ? null
           : ComicVinePublisher.fromJson(
@@ -224,18 +258,22 @@ ComicVineSerieDetail _$ComicVineSerieDetailFromJson(
       (json['characters'] as List<dynamic>)
           .map((e) => ComicVinePerso.fromJson(e as Map<String, dynamic>))
           .toList(),
+      (json['episodes'] as List<dynamic>)
+          .map((e) => ComicVineEpisode.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ComicVineSerieDetailToJson(
         ComicVineSerieDetail instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'description': instance.description,
+      'deck': instance.description,
       'count_of_episodes': instance.nbEpisode,
       'start_year': instance.year,
       'image': instance.image,
       'publisher': instance.publisher,
       'characters': instance.characters,
+      'episodes': instance.episode,
     };
 
 ComicVineIssues _$ComicVineIssuesFromJson(Map<String, dynamic> json) =>
@@ -275,7 +313,7 @@ ComicVineIssueDetail _$ComicVineIssueDetailFromJson(
       json['image'] == null
           ? null
           : ComicVineImage.fromJson(json['image'] as Map<String, dynamic>),
-      json['description'] as String?,
+      json['deck'] as String?,
       (json['person_credits'] as List<dynamic>)
           .map((e) => ComicVineAuteur.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -293,7 +331,7 @@ Map<String, dynamic> _$ComicVineIssueDetailToJson(
       'cover_date': instance.date,
       'volume': instance.comic,
       'image': instance.image,
-      'description': instance.description,
+      'deck': instance.description,
       'person_credits': instance.auteurs,
       'character_credits': instance.character,
     };

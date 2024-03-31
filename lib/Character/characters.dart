@@ -94,7 +94,7 @@ class Character extends StatelessWidget {
                       child: Stack(
                         children: [
                           Image.network(
-                            character.image?.iconUrl ?? 'null',
+                            'assets/svg/img.png',
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,

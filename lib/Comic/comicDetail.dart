@@ -25,7 +25,7 @@ class AppColors {
   static const Color element = Colors.white;
 }
 
-///BLOC
+///BLOC COMIC DETAIL
 class AccueilComicDetail extends StatelessWidget {
   @override
   final String issueId;
@@ -41,6 +41,28 @@ class AccueilComicDetail extends StatelessWidget {
       child: Scaffold(
 
         body: DetailComics(comicsId: issueId),
+      ),
+    );
+  }
+}
+
+///BLOC CHARACTER
+class AccueilCharacterDetail extends StatelessWidget {
+
+  @override
+  final String characterId;
+  final AppBloc appBloc;
+
+  AccueilCharacterDetail({Key? key, required this.characterId})
+      : appBloc = AppBloc(ComicVineRequests()),
+        super(key: key);
+
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => appBloc..add(FetchCharacter(characterId)),
+      child: Scaffold(
+
+        body: CharacterWidget(characterId: characterId),
       ),
     );
   }
@@ -201,7 +223,14 @@ class DetailComics extends StatelessWidget {
                         margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: AssetImage('assets/svg/img.png'),
+                            child: ClipOval(
+                              child: Image.network(
+                                'assets/svg/img.png',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                            ),
                           ),
                           title: Text(
                             auteur.name,
@@ -226,25 +255,15 @@ class DetailComics extends StatelessWidget {
                           GoRouter.of(context).go('/character/${personnage.id}');
                           print(personnage.id);
                         },
-                          child: Container(
-                            margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                child: ClipOval(
-                                  child: Image.network(
-                                    'null',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                personnage.name,
-                                style: TextStyle(color: Colors.white),
-                              ),
+                        child: Container(
+                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: 20,
                             ),
-                          )
+                            child: CharacterWidget(characterId: personnage.id.toString()), // Utilisation de CharacterWidget ajusté
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -258,4 +277,38 @@ class DetailComics extends StatelessWidget {
   }
 }
 
+class CharacterWidget extends StatelessWidget {
 
+  final String characterId;
+
+  CharacterWidget({Key? key, required this.characterId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (context, state) {
+        if (state is CharacterLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is CharacterLoaded) {
+          return _buildComicList(state.characters);
+        } else if (state is CharacterError) {
+          return Center(child: Text('Erreur: ${state.errorMessage4}'));
+        } else {
+          print(this.characterId);
+          print(state);
+          return Center(child: Text('État inconnu'));
+        }
+      },
+    );
+  }
+
+  Widget _buildComicList(ComicVineCharacter character){
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(character.image?.iconUrl ?? 'url_to_default_image'),
+      ),
+      title: Text(character.name ?? 'Inconnu', style: TextStyle(color: Colors.white)),
+
+    );
+  }
+}
