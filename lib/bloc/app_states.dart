@@ -114,8 +114,10 @@ class SearchLoadInProgress extends SearchState {}
 class SearchLoadSuccess extends SearchState {
 
   final List<ComicVineSearch> searchIssueResults;
+  final List<ComicVineSearch> searchCharacterResults;
   SearchLoadSuccess({
     required this.searchIssueResults,
+    required this.searchCharacterResults,
   });
 
   @override

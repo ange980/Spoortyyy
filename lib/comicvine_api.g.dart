@@ -208,7 +208,7 @@ class _ComicVineAPI implements ComicVineAPI {
   }
 
   @override
-  Future<ComicVineSearchResponse> searchIssue(
+  Future<ComicVineSearchResponse> search(
     String search,
     String input,
     int limit,

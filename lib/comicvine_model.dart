@@ -129,6 +129,7 @@ class ComicVineSearchResponse {
 
 
 
+
 //Informations Search
 @JsonSerializable()
 class ComicVineSearch {
@@ -139,7 +140,10 @@ class ComicVineSearch {
   @JsonKey(name: 'name')
   final String? name;
 
-  @JsonKey(name: 'issuenumber')
+  @JsonKey(name: 'aliases')
+  final String? alias;
+
+  @JsonKey(name: 'issue_number')
   final String? number;
 
   @JsonKey(name: 'cover_date')
@@ -153,7 +157,7 @@ class ComicVineSearch {
 
 
 
-  ComicVineSearch(this.id,this.name, this.number,this.image,this.comic,this.date);
+  ComicVineSearch(this.id,this.name, this.number,this.image,this.comic,this.date,this.alias);
 
   factory ComicVineSearch.fromJson(Map<String, dynamic> json) =>
       _$ComicVineSearchFromJson(json);

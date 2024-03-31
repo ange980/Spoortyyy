@@ -61,8 +61,8 @@ class AccueilMovieDetail extends StatelessWidget {
 }
 
 class DetailMovies extends StatelessWidget {
-
   final String moviesId;
+
   DetailMovies({Key? key, required this.moviesId}) : super(key: key);
 
   @override
@@ -72,7 +72,7 @@ class DetailMovies extends StatelessWidget {
         if (state is MovieDetailLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is MovieDetailLoaded) {
-          return _buildComicList(state.details);
+          return _buildComicList(state.details, context);
         } else if (state is MovieDetailError) {
           return Center(child: Text('Erreur: ${state.errorMessage5}'));
         } else {
@@ -82,10 +82,19 @@ class DetailMovies extends StatelessWidget {
     );
   }
 
-
-  Widget _buildComicList(ComicVineMovieDetail detail){
+  Widget _buildComicList(ComicVineMovieDetail detail, BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cardBackground,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+        ),
+      ),
       body: DefaultTabController(
         length: 3,
         child: Column(
@@ -95,8 +104,8 @@ class DetailMovies extends StatelessWidget {
                 child: Stack(
                   children: [
                     Container(
-                      width: double.infinity, // Prend toute la largeur disponible
-                      height: double.infinity, // Prend toute la hauteur disponible
+                      width: double.infinity,
+                      height: double.infinity,
                       child: Stack(
                         children: [
                           Image.network(
@@ -115,33 +124,33 @@ class DetailMovies extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding:const EdgeInsets.only(left: 32.0),
+                      padding: const EdgeInsets.only(left: 32.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          /// COTE DROIT
-                          /// IMAGE SERIE **CHANGER**
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child:
-                            Image.network(detail.image?.iconUrl?? 'null', width: 128, height: 163, fit: BoxFit.cover),
+                            child: Image.network(
+                              detail.image?.iconUrl ?? 'null',
+                              width: 128,
+                              height: 163,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           SizedBox(width: 24),
-                          ///COTE GAUCHE
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                detail.name?? 'Null',
+                                detail.name ?? 'Null',
                                 style: TextStyle(
                                   color: AppColors.element,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              /// ******REUTILISABLE***** Icone + texte
                               Row(
                                 children: [
                                   SvgPicture.asset(
@@ -150,7 +159,7 @@ class DetailMovies extends StatelessWidget {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    detail.name?? 'Null',
+                                    detail.name ?? 'Null',
                                     style: TextStyle(
                                       color: AppColors.element,
                                       fontSize: 16,
@@ -166,7 +175,7 @@ class DetailMovies extends StatelessWidget {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    detail.date?? 'Mai 1999',
+                                    detail.date ?? 'Mai 1999',
                                     style: TextStyle(
                                       color: AppColors.element,
                                       fontSize: 16,
@@ -179,12 +188,10 @@ class DetailMovies extends StatelessWidget {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
             ),
-            /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
             TabBar(
               tabs: [
                 Tab(text: 'Synopsis'),
@@ -197,7 +204,6 @@ class DetailMovies extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    ///TEXTE HISTOIRE SERIE
                     child: Text(
                       'The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division. '
                           'A small team of operatives led by Agent Coulson (Clark Gregg) who must deal with the '
@@ -209,10 +215,9 @@ class DetailMovies extends StatelessWidget {
                     ),
                   ),
 
-                  ///LISTE Personnage
                   ListView.builder(
                     itemCount: detail.characters.length,
-                    itemBuilder: (BuildContext context, int index){
+                    itemBuilder: (BuildContext context, int index) {
                       final personnage = detail.characters[index];
                       return InkWell(
                         onTap: () {
@@ -236,14 +241,13 @@ class DetailMovies extends StatelessWidget {
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
-                        )
+                        ),
                       );
                     },
                   ),
 
-                  ///DETAILS
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, // Alignez le texte à gauche
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       buildInfoRow('Classification', 'R' ?? 'Inconnu'),
                       if (detail.writers.isNotEmpty)
@@ -253,12 +257,10 @@ class DetailMovies extends StatelessWidget {
                       if (detail.studio.isNotEmpty)
                         buildInfoSection('Studios', detail.studio.map((studio) => studio.name).toList()),
                       buildInfoRow('Budget', formatNumberAsMillions(detail.budget) ?? 'Inconnu'),
-
                       buildInfoRow('Recettes au box-office', formatNumberAsMillions(detail.boxOffice)),
                       buildInfoRow('Recette brutes totales',formatNumberAsMillions(detail.total)),
                     ],
                   )
-
                 ],
               ),
             ),
@@ -281,11 +283,11 @@ Widget buildInfoRow(String title, String value) {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Spacer(), // Cela crée un espace entre les éléments de la rangée
+        Spacer(),
         Expanded(
           child: Text(
             value,
-            textAlign: TextAlign.right, // Alignez le texte à droite pour les valeurs
+            textAlign: TextAlign.right,
             style: TextStyle(color: Colors.white),
             overflow: TextOverflow.ellipsis,
           ),
@@ -294,6 +296,7 @@ Widget buildInfoRow(String title, String value) {
     ),
   );
 }
+
 Widget buildInfoSection(String title, List<String> names) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),

@@ -48,8 +48,8 @@ class AccueilSerieDetail extends StatelessWidget {
 
 ///PAGE DETAILS SERIES
 class DetailSeries extends StatelessWidget {
-
   final String seriesId;
+
   DetailSeries({Key? key, required this.seriesId}) : super(key: key);
 
   @override
@@ -59,7 +59,7 @@ class DetailSeries extends StatelessWidget {
         if (state is SerieDetailLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is SerieDetailLoaded) {
-          return _buildComicList(state.details);
+          return _buildComicList(state.details, context);
         } else if (state is SerieDetailError) {
           return Center(child: Text('Erreur: ${state.errorMessage6}'));
         } else {
@@ -69,9 +69,19 @@ class DetailSeries extends StatelessWidget {
     );
   }
 
-  Widget _buildComicList(ComicVineSerieDetail detail){
+  Widget _buildComicList(ComicVineSerieDetail detail, BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cardBackground,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop(); // Retour à la page précédente
+          },
+        ),
+      ),
       body: DefaultTabController(
         length: 3,
         child: Column(
@@ -81,8 +91,8 @@ class DetailSeries extends StatelessWidget {
                 child: Stack(
                   children: [
                     Container(
-                      width: double.infinity, // Prend toute la largeur disponible
-                      height: double.infinity, // Prend toute la hauteur disponible
+                      width: double.infinity,
+                      height: double.infinity,
                       child: Stack(
                         children: [
                           Image.network(
@@ -101,32 +111,33 @@ class DetailSeries extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding:const EdgeInsets.only(left: 32.0),
+                      padding: const EdgeInsets.only(left: 32.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          /// COTE DROIT
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child:
-                            Image.network(detail.image?.iconUrl?? 'null', width: 128, height: 163, fit: BoxFit.cover),
+                            child: Image.network(
+                              detail.image?.iconUrl ?? 'null',
+                              width: 128,
+                              height: 163,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          SizedBox(width: 24), //Espace icône et texte
-                          ///COTE GAUCHE
+                          SizedBox(width: 24),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.center, // To center the Column contents vertically
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 detail.name,
                                 style: TextStyle(
                                   color: AppColors.element,
-                                  fontSize: 24, // Taille de police plus grande
-                                  fontWeight: FontWeight.bold, // Texte en gras
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              /// ******REUTILISABLE***** Icone + texte
                               Row(
                                 children: [
                                   SvgPicture.asset(
@@ -135,7 +146,7 @@ class DetailSeries extends StatelessWidget {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    detail.publisher?.name?? 'Marvel',
+                                    detail.publisher?.name ?? 'Marvel',
                                     style: TextStyle(
                                       color: AppColors.element,
                                       fontSize: 16,
@@ -180,12 +191,10 @@ class DetailSeries extends StatelessWidget {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
             ),
-            /// ******REUTILISABLE***** Onglet Histoire/personnage/Episode
             TabBar(
               tabs: [
                 Tab(text: 'Histoire'),
@@ -198,7 +207,6 @@ class DetailSeries extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    ///TEXTE HISTOIRE SERIE
                     child: Text(
                       detail.description,
                       style: TextStyle(
@@ -206,40 +214,38 @@ class DetailSeries extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ///LISTE PERSONNAGES
                   ListView.builder(
                     itemCount: detail.characters.length,
-                    itemBuilder: (BuildContext context, int index){
+                    itemBuilder: (BuildContext context, int index) {
                       final personnage = detail.characters[index];
                       return InkWell(
                         onTap: () {
                           GoRouter.of(context).go('/character/${personnage.id}');
                           print(personnage.id);
                         },
-                          child: Container(
-                            margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                child: ClipOval(
-                                  child: Image.network(
-                                    'null',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                  ),
+                        child: Container(
+                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              child: ClipOval(
+                                child: Image.network(
+                                  'null',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
                                 ),
                               ),
-                              title: Text(
-                                personnage.name,
-                                style: TextStyle(color: Colors.white),
-                              ),
                             ),
-                          )
+                            title: Text(
+                              personnage.name,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
                       );
                     },
                   ),
-                  ///LISTE EPISODE
-                  Icon(Icons.list),  // Remplacer par le contenu réel
+                  Icon(Icons.list), // Remplacer par le contenu réel
                 ],
               ),
             ),

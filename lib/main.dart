@@ -64,7 +64,7 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/movies',
-      builder: (BuildContext context, GoRouterState state) => MoviesPage(),
+      builder: (BuildContext context, GoRouterState state) => AccueilMovie(),
     ),
     GoRoute(
       path: '/moviesDetail/:id',

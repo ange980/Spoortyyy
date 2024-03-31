@@ -53,8 +53,10 @@ class SearchBloc extends Bloc< AppEvent, SearchState> {
       yield SearchLoadInProgress();
       try {
         final searchResults = await search.searchIssue(event.value);
+        final searchResultsC = await search.searchCharacter(event.value);
         yield SearchLoadSuccess(
           searchIssueResults: searchResults.results,
+          searchCharacterResults: searchResultsC.results,
         );
       } catch (_) {
         yield SearchLoadFailure();

@@ -136,12 +136,14 @@ ComicVineSearch _$ComicVineSearchFromJson(Map<String, dynamic> json) =>
           ? null
           : ComicVineComic.fromJson(json['volume'] as Map<String, dynamic>),
       json['cover_date'] as String?,
+      json['aliases'] as String?,
     );
 
 Map<String, dynamic> _$ComicVineSearchToJson(ComicVineSearch instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'aliases': instance.alias,
       'issuenumber': instance.number,
       'cover_date': instance.date,
       'volume': instance.comic,
