@@ -45,7 +45,19 @@ class ComicVineMoviesDetailResponse{
   Map<String, dynamic> toJson() => _$ComicVineMoviesDetailResponseToJson(this);
 }
 
+@JsonSerializable()
+class ComicVineSearchResponse{
+  @JsonKey(name: 'results')
+  final List<ComicVineSearch> results;
 
+  ComicVineSearchResponse(this.results);
+
+  factory ComicVineSearchResponse.fromJson(Map<String, dynamic> json) {
+    return _$ComicVineSearchResponseFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() => _$ComicVineSearchToJson(this as ComicVineSearch);
+}
 
 @JsonSerializable()
 class ComicVineIssuesResponse{
@@ -248,6 +260,36 @@ class ComicVineIssues {
       _$ComicVineIssuesFromJson(json);
 
   Map<String, dynamic> toJson() => _$ComicVineIssuesToJson(this);
+}
+
+@JsonSerializable()
+class ComicVineSearch {
+
+  @JsonKey(name: 'id')
+  final int id;
+
+  @JsonKey(name: 'name')
+  final String? name;
+
+  @JsonKey(name: 'issue_number')
+  final String? number;
+
+  @JsonKey(name: 'cover_date')
+  final String? date;
+
+  @JsonKey(name: 'volume')
+  final ComicVineComic? comic;
+
+  @JsonKey(name: 'image')
+  final ComicVineImage? image;
+
+
+
+  ComicVineSearch(this.id,this.name, this.number,this.image,this.comic,this.date);
+
+  factory ComicVineSearch.fromJson(Map<String, dynamic> json) => _$ComicVineSearchFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ComicVineSearchResponseToJson(this as ComicVineSearchResponse);
 }
 
 //Informations Details Comics

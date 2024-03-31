@@ -8,16 +8,16 @@ import 'bloc/app_bloc.dart';
 import 'bloc/app_events.dart';
 import 'comicvine_api.dart';
 
-class MovieListBuilder extends StatelessWidget {
+class SerieListBuilder extends StatelessWidget {
   @override
 
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<SerieBloc, AppState>(
       builder: (context, state) {
-        if (state is MoviesLoadingState) {
+        if (state is SeriesLoadingState) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is MoviesLoadedState) {
-          return _buildMovieList(state.movies);
+        } else if (state is SeriesLoadedState) {
+          return _buildSerieList(state.series);
         } else if (state is AppErrorState) {
           return Center(child: Text('Erreur: ${state.errorMessage}'));
         } else {
@@ -27,7 +27,7 @@ class MovieListBuilder extends StatelessWidget {
     );
   }
 
-  Widget _buildMovieList(List<ComicVineMovie> movies) {
+  Widget _buildSerieList(List<ComicVineSeries> series) {
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF1E3243),
@@ -44,7 +44,7 @@ class MovieListBuilder extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Films populaires',
+                  'Séries populaires',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -67,9 +67,9 @@ class MovieListBuilder extends StatelessWidget {
             height: 200.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount:10,
+              itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
-                final movie = movies[index];
+                final serie = series[index];
                 return Container(
                   width: 160.0,
                   margin: EdgeInsets.symmetric(horizontal: 8.0),
@@ -87,7 +87,7 @@ class MovieListBuilder extends StatelessWidget {
                             topRight: Radius.circular(8.0),
                           ),
                           child: Image.network(
-                            movie.image?.iconUrl ?? 'URL par défaut',
+                            serie.image?.iconUrl ?? 'URL par défaut',
                             height: 140.0,
                             width: 160.0,
                             fit: BoxFit.cover,
@@ -105,7 +105,7 @@ class MovieListBuilder extends StatelessWidget {
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                         child: Text(
-                          movie.name ?? 'Titre du Film',
+                          serie.name ?? 'Titre du Film',
                           style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                         ),

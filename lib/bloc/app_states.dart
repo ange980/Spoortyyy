@@ -1,45 +1,75 @@
+import 'package:equatable/equatable.dart';
 import 'package:untitled/comicvine_model.dart';
 
-abstract class AppState {}
 
-class MoviesLoading extends AppState {}
+abstract class AppState extends Equatable {
+  const AppState();
 
-class MoviesLoaded extends AppState {
+  @override
+  List<Object> get props => [];
+}
+
+class AppInitialState extends AppState {}
+
+class AppLoadingState extends AppState {}
+class MoviesLoadingState extends AppState {}
+
+
+class SeriesLoadingState extends AppState {}
+class ComicsLoadingState extends AppState {}
+
+class MoviesLoadedState extends AppState {
   final List<ComicVineMovie> movies;
 
-  MoviesLoaded(this.movies);
+  const MoviesLoadedState(this.movies);
+
+  @override
+  List<Object> get props => [movies];
 }
 
-class MoviesError extends AppState {
-  final String errorMessage;
-
-  MoviesError(this.errorMessage);
-}
-
-class SeriesLoading extends AppState {}
-
-class SeriesLoaded extends AppState {
+class SeriesLoadedState extends AppState {
   final List<ComicVineSeries> series;
 
-  SeriesLoaded(this.series);
+  const SeriesLoadedState(this.series);
+
+  @override
+  List<Object> get props => [series];
+}
+class ComicsLoadedState extends AppState {
+  final List<ComicVineIssues> comics;
+
+  const ComicsLoadedState(this.comics);
+
+  @override
+  List<Object> get props => [comics];
 }
 
-class SeriesError extends AppState {
+class AppErrorState extends AppState {
   final String errorMessage;
 
-  SeriesError(this.errorMessage);
+  const AppErrorState(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+class SearchState extends Equatable {
+  @override
+  List<Object?> get props => [];
 }
 
-class ComicsLoading extends AppState {}
+class SearchInitial extends SearchState {}
 
-class ComicsLoaded extends AppState {
-  final List<ComicVineSeries> comics;
+class SearchLoadInProgress extends SearchState {}
 
-  ComicsLoaded(this.comics);
+class SearchLoadSuccess extends SearchState {
+
+  final List<ComicVineSearch> searchIssueResults;
+  SearchLoadSuccess({
+    required this.searchIssueResults,
+  });
+
+  @override
+  List<Object?> get props => [searchIssueResults];
 }
 
-class ComicsError extends AppState {
-  final String errorMessage;
-
-  ComicsError(this.errorMessage);
-}
+class SearchLoadFailure extends SearchState {}

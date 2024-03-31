@@ -32,8 +32,13 @@ abstract class ComicVineAPI {
   @GET('issues')
   Future<ComicVineIssuesResponse> loadVolumes(
       {@Query('limit') int limit = 20});
-}
 
+  @GET('search')
+  Future<ComicVineSearchResponse> searchIssue(@Query('search')String search,
+  {@Query('ressources') String input, @Query('limit') int limit = 10});
+
+
+}
 
 class ComicVineRequests {
 
@@ -49,7 +54,7 @@ class ComicVineRequests {
   final ComicVineAPI _api = ComicVineAPI(
     Dio(
       BaseOptions(queryParameters: {
-        'api_key': 'cd0f322e37a01eacb8ec8fe4089d14f5107f4c41',
+        'api_key': '15c083cd15844ca32d7e6c80cbb16939f3991a63',
         'format': 'json',
       }),
     ),
@@ -111,7 +116,14 @@ class ComicVineRequests {
   }
 
 
-
+  Future<ComicVineSearchResponse> searchIssue(String search) {
+    try {
+      return _api.searchIssue(search);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
 }
 

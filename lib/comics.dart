@@ -28,12 +28,12 @@ class AppColors {
 ///BLOC
 class AccueilComic extends StatelessWidget {
   @override
-  final MovieBloc appBloc = MovieBloc(ComicVineRequests());
+  final ComicBloc appBloc = ComicBloc(ComicVineRequests());
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => appBloc..add(FetchComics()),
       child: Scaffold(
-
+        backgroundColor: AppColors.screenBackground,
         body: ComicsPage(),
       ),
     );
@@ -46,13 +46,13 @@ class ComicsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc,AppState>(
+    return BlocBuilder<ComicBloc,AppState>(
       builder: (context, state) {
-        if (state is ComicsLoading) {
+        if (state is ComicsLoadingState) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is ComicsLoaded) {
+        } else if (state is ComicsLoadedState) {
           return _buildComicList(state.comics.cast<ComicVineIssues>());
-        } else if (state is ComicsError) {
+        } else if (state is AppErrorState) {
           return Center(child: Text('Erreur:'));
         } else {
           return Center(child: Text('État inconnu'));
