@@ -33,7 +33,7 @@ class AccueilSerie extends StatelessWidget {
     return BlocProvider(
       create: (context) => appBloc..add(FetchSeries()),
       child: Scaffold(
-
+        backgroundColor: AppColors.screenBackground,
         body: SeriesPage(),
       ),
     );
@@ -48,12 +48,12 @@ class SeriesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
-        if (state is SeriesLoading) {
+        if (state is AppLoadingState) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is SeriesLoaded) {
+        } else if (state is SeriesLoadedState) {
           return _buildSerieList(state.series);
-        } else if (state is SeriesError) {
-          return Center(child: Text('Erreur: ${state.errorMessage2}'));
+        } else if (state is AppErrorState) {
+          return Center(child: Text('Erreur: '));
         } else {
           return Center(child: Text('État inconnu'));
         }
