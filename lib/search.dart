@@ -64,7 +64,7 @@ class _SearchPageState extends State<SearchPage> {
                                 return TextField(
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    hintText: 'Comic, film, série...',
+                                    hintText: 'Sport, évènements, lieux...',
                                     hintStyle: TextStyle(
                                       color: const Color(0x50FFFFFF),
                                       fontSize: 18,
@@ -385,7 +385,7 @@ class _SearchPageState extends State<SearchPage> {
                                               ),
                                               children: const [
                                                 TextSpan(
-                                                  text: 'Saisissez une recherche pour trouver un ',
+                                                  text: 'Trouvez votre bohneur parmis plus de 1000 sports, évènements et lieux sportifs',
                                                 ),
                                               ],
                                             ),

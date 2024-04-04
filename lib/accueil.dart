@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:untitled/bloc/app_bloc.dart';
 import 'package:untitled/comicvine_api.dart';
-import 'package:untitled/movie_list.dart';
-import 'package:untitled/serie_list.dart';
+import 'package:untitled/Movie/movie_list.dart';
+import 'package:untitled/Serie/serie_list.dart';
 
 import 'bloc/app_events.dart';
 import 'bloc/app_states.dart';
-import 'comic_list.dart';
+import 'Comic/comic_list.dart';
 
 class Accueil extends StatelessWidget {
   @override
@@ -34,7 +34,7 @@ class Accueil extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Bienvenue !',
+                  'Sporty',
                   style: TextStyle(
                     fontSize: 30.0,
                     fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class Accueil extends StatelessWidget {
                   ),
                 ),
                 SvgPicture.asset(
-                  'assets/svg/astronaut.svg',
+                  'assets/svg/avatar.svg',
                   height: 140,
                 ),
               ],

@@ -1,156 +1,87 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled/bloc/app_states.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:untitled/comicvine_model.dart';
-import 'package:untitled/comicvine_api.dart';
 import 'package:go_router/go_router.dart';
 
-import '../bloc/app_bloc.dart';
-import '../bloc/app_events.dart';
-
-String formatNumberAsMillions(String? numberStr) {
-
-  if (numberStr == null || numberStr.isEmpty) return "null";
-
-  int? number = int.tryParse(numberStr);
-  if (number == null) return "null";
-  double numberInMillions = number / 1000000;
-  if (numberInMillions == numberInMillions.toInt().toDouble()) {
-    return "${numberInMillions.toInt()} millions \$";
-  } else {
-    return "${numberInMillions.toStringAsFixed(2)} millions \$";
-  }
-}
-
-
-
-///COULEURS
 class AppColors {
-  static const Color screenBackground = Color(0xFF15232E);
-  static const Color orange = Color(0xFFFF8100);
   static const Color cardBackground = Color(0xFF1E3243);
-  static const Color cardElementBackground = Color(0xFF284C6A);
-  static const Color seeMoreBackground = Color(0xFF0F1921);
-  static const Color bottomBarBackground = Color(0xFF0F1E2B);
-  static const Color bottomBarSelectedBackground = Color(0xFF12273C);
-  static const Color bottomBarSelectedText = Color(0xFF12273C);
-  static const Color bottomBarUnselectedText = Color(0xFF778BA8);
-  static const Color element = Colors.white;
 }
 
-///BLOC
 class AccueilMovie extends StatelessWidget {
   @override
-  final AppBloc appBloc = AppBloc(ComicVineRequests());
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => appBloc..add(FetchMovies()),
-      child: Scaffold(
-
-        body: MoviesPage(),
-      ),
+    return Scaffold(
+      backgroundColor: AppColors.cardBackground,
+      body: MoviePage(),
     );
   }
 }
 
-///PAGE LISTE FILMS
-class MoviesPage extends StatelessWidget {
-  const MoviesPage({super.key});
+class MoviePage extends StatelessWidget {
+  const MoviePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
-      builder: (context, state) {
-        if (state is MoviesLoading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (state is MoviesLoaded) {
-          return _buildMovieList(state.movies);
-        } else if (state is MoviesError) {
-          return Center(child: Text('Erreur: ${state.errorMessage}'));
-        } else {
-          return Center(child: Text('État inconnu'));
-        }
-      },
-    );
-  }
-
-  Widget _buildMovieList(List<ComicVineMovie> movies) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFF1E3243),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Films les plus populaires',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.left,
-              ),
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 48.0, left: 20),
+          child: Text(
+            'Evenements',
+            style: TextStyle(
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                  itemCount: movies.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final movie = movies[index];
-                    return InkWell(
-                      onTap: () {
-                        GoRouter.of(context).go('/moviesDetail/${movie.id}');
-                        print(movie.id);
-                      },
-                      child: Column(
-                        children: [
-                          MovieWidget(
-                              rank: index + 1,
-                              title: movie.name ?? 'Nom inconnu',
-                              imageUrl: movie.image?.iconUrl ?? 'URL par défaut',
-                              time: movie.runtime ?? '160',
-                              date: movie.releaseDate ?? '1999'
-                          ),
-                          SizedBox(height: 16.0), // Espace entre chaque série
-                        ],
-                      ),
-
-                    );
-                  },
+        ),
+        SizedBox(height: 16.0), // Espace
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: moviesData.length,
+          itemBuilder: (BuildContext context, int index) {
+            final serie = moviesData[index];
+            return InkWell(
+              onTap: () {
+                GoRouter.of(context).go('/moviesDetail/${serie['id']}');
+                print(serie['id']);
+              },
+              child: Column(
+                children: [
+                  MoviesWidget(
+                    rank: index + 1,
+                    title: serie['name'] ?? 'Nom inconnu',
+                    imageUrl: serie['imageUrl'] ?? 'URL par défaut',
+                    publisher: serie['publisher'] ?? 'Marvel',
+                    numberOfEpisodes: serie['numberOfEpisodes'] ?? 22,
+                    date: serie['date'] ?? '1999',
+                  ),
+                  SizedBox(height: 16.0), // Espace entre chaque série
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
+            );
+          },
+        ),
+        SizedBox(height: 40,)
+      ],
     );
   }
 }
 
-
-class MovieWidget extends StatelessWidget {
-
+class MoviesWidget extends StatelessWidget {
   final String title;
   final String imageUrl;
-  final String time;
+  final String publisher;
+  final int numberOfEpisodes;
   final String date;
   final int rank;
 
-  MovieWidget({
+  MoviesWidget({
     required this.rank,
     required this.title,
     required this.imageUrl,
-    required this.time,
+    required this.publisher,
+    required this.numberOfEpisodes,
     required this.date,
   });
 
@@ -158,7 +89,7 @@ class MovieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF1E3243),
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: EdgeInsets.all(16.0),
@@ -168,8 +99,12 @@ class MovieWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child:
-                Image.network(this.imageUrl, width: 128, height: 163, fit: BoxFit.cover),
+                child: Image.asset(
+                  this.imageUrl,
+                  width: 128,
+                  height: 163,
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(width: 16.0),
               Expanded(
@@ -180,7 +115,7 @@ class MovieWidget extends StatelessWidget {
                       this.title,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.0,
+                        fontSize: 17.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -188,16 +123,37 @@ class MovieWidget extends StatelessWidget {
                     Row(
                       children: [
                         SvgPicture.asset(
-                          'assets/svg/ic_movie_bicolor.svg',
+                          'assets/svg/ic_publisher_bicolor.svg',
                           width: 15,
                           height: 15,
                           color: Colors.grey,
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          '${this.time} minutes',
+                          this.publisher,
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/svg/ic_tv_bicolor.svg',
+                          width: 15,
+                          height: 15,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 15.0),
+                        Text(
+                          this.numberOfEpisodes.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ],
@@ -248,7 +204,29 @@ class MovieWidget extends StatelessWidget {
   }
 }
 
-
-
-
-
+List<Map<String, dynamic>> moviesData = [
+  {
+    'id': 1,
+    'name': 'Tournoi pétanque',
+    'imageUrl': 'assets/image/serie1.jpeg',
+    'publisher': 'Intermédiaire',
+    'numberOfEpisodes': 24,
+    'date': '10-04-2024',
+  },
+  {
+    'id': 2,
+    'name': 'Match Badminton',
+    'imageUrl': 'assets/image/badminton.jpeg',
+    'publisher': 'Amateur',
+    'numberOfEpisodes': 18,
+    'date': '11-5-2024',
+  },
+  {
+    'id': 3,
+    'name': 'Cours escrime',
+    'imageUrl': 'assets/image/escrime.jpeg',
+    'publisher': 'Image Comics',
+    'numberOfEpisodes': 30,
+    'date': '13-4-2024',
+  },
+];

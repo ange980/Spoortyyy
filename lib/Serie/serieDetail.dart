@@ -1,251 +1,93 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:untitled/bloc/app_states.dart';
-import 'package:untitled/comicvine_api.dart';
-import 'package:untitled/comicvine_model.dart';
 import 'package:go_router/go_router.dart';
 
-import '../bloc/app_bloc.dart';
-import '../bloc/app_events.dart';
+class SeriesDetailPage extends StatelessWidget {
+  final Map<String, dynamic> serie;
 
-///COULEURS
-class AppColors {
-  static const Color screenBackground = Color(0xFF15232E);
-  static const Color orange = Color(0xFFFF8100);
-  static const Color cardBackground = Color(0xFF1E3243);
-  static const Color cardElementBackground = Color(0xFF284C6A);
-  static const Color seeMoreBackground = Color(0xFF0F1921);
-  static const Color bottomBarBackground = Color(0xFF0F1E2B);
-  static const Color bottomBarSelectedBackground = Color(0xFF12273C);
-  static const Color bottomBarSelectedText = Color(0xFF12273C);
-  static const Color bottomBarUnselectedText = Color(0xFF778BA8);
-  static const Color element = Colors.white;
-}
-
-///BLOC
-class AccueilSerieDetail extends StatelessWidget {
-  @override
-  final String serieId;
-  final AppBloc appBloc;
-
-  AccueilSerieDetail({Key? key, required this.serieId})
-      : appBloc = AppBloc(ComicVineRequests()),
-        super(key: key);
-
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => appBloc..add(FetchSeriesDetail(serieId)),
-      child: Scaffold(
-
-        body: DetailSeries(seriesId: serieId),
-      ),
-    );
-  }
-}
-
-///PAGE DETAILS SERIES
-class DetailSeries extends StatelessWidget {
-  final String seriesId;
-
-  DetailSeries({Key? key, required this.seriesId}) : super(key: key);
+  SeriesDetailPage({required this.serie});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
-      builder: (context, state) {
-        if (state is SerieDetailLoading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (state is SerieDetailLoaded) {
-          return _buildComicList(state.details, context);
-        } else if (state is SerieDetailError) {
-          return Center(child: Text('Erreur: ${state.errorMessage6}'));
-        } else {
-          return Center(child: Text('État inconnu'));
-        }
-      },
-    );
-  }
-
-  Widget _buildComicList(ComicVineSerieDetail detail, BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cardBackground,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: Text('Détails de la série'),
+        backgroundColor: AppColors.cardBackground,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop(); // Retour à la page précédente
+            // Fonction appelée lorsque le bouton de retour est pressé
+            GoRouter.of(context).go('/');
           },
         ),
       ),
-      body: DefaultTabController(
-        length: 3,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: Stack(
-                        children: [
-                          Image.network(
-                            detail.image?.iconUrl ?? 'null',
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                          BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                            child: Container(
-                              color: Colors.black.withOpacity(0),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 32.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              detail.image?.iconUrl ?? 'null',
-                              width: 128,
-                              height: 163,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(width: 24),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                detail.name,
-                                style: TextStyle(
-                                  color: AppColors.element,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/svg/ic_publisher_bicolor.svg',
-                                    color: AppColors.element,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    detail.publisher?.name ?? 'Marvel',
-                                    style: TextStyle(
-                                      color: AppColors.element,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/svg/ic_tv_bicolor.svg',
-                                    color: AppColors.element,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    '${detail.nbEpisode} épisodes',
-                                    style: TextStyle(
-                                      color: AppColors.element,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/svg/ic_calendar_bicolor.svg',
-                                    color: AppColors.element,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    detail.year,
-                                    style: TextStyle(
-                                      color: AppColors.element,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              serie['name'] ?? 'Nom inconnu',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            TabBar(
-              tabs: [
-                Tab(text: 'Histoire'),
-                Tab(text: 'Personnages'),
-                Tab(text: 'Épisodes'),
+            SizedBox(height: 16.0),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(
+                serie['imageUrl'] ?? 'URL par défaut',
+                width: 300,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Description:',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'Ajoutez votre texte descriptif ici...',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Icon(
+                  Icons.sports,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 8.0),
+                Text(
+                  'Liste des sports:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
+            SizedBox(height: 8.0),
             Expanded(
-              child: TabBarView(
+              child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      detail.description,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ListView.builder(
-                    itemCount: detail.characters.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final personnage = detail.characters[index];
-                      return InkWell(
-                        onTap: () {
-                          GoRouter.of(context).go('/character/${personnage.id}');
-                          print(personnage.id);
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: index == 0 ? 16.0 : 0.0, bottom: 8.0),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              child: ClipOval(
-                                child: Image.network(
-                                  'null',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              personnage.name,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Icon(Icons.list), // Remplacer par le contenu réel
+                  _buildSportListItem('Football'),
+                  _buildSportListItem('Basketball'),
+                  _buildSportListItem('Tennis'),
+                  // Ajoutez d'autres sports ici...
                 ],
               ),
             ),
@@ -254,4 +96,27 @@ class DetailSeries extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildSportListItem(String sportName) {
+    return ListTile(
+      leading: Icon(
+        Icons.sports_soccer,
+        color: Colors.white,
+      ),
+      title: Text(
+        sportName,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+      ),
+      onTap: () {
+        // Implémentez ici ce que vous souhaitez faire lorsqu'un sport est sélectionné
+      },
+    );
+  }
+}
+
+class AppColors {
+  static const Color cardBackground = Color(0xFF1E3243);
 }

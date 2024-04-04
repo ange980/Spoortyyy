@@ -45,9 +45,10 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/comicsDetail/:id',
-      builder: (BuildContext context, GoRouterState state) {
+      builder: (context, state) {
         final id = state.pathParameters['id']!;
-        return AccueilComicDetail(issueId: id,);
+        final serie = comicsData.firstWhere((serie) => serie['id'] == int.parse(id));
+        return AccueilComicDetail(comic: serie);
       },
     ),
     GoRoute(
@@ -57,20 +58,23 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/seriesDetail/:id',
-      builder: (BuildContext context, GoRouterState state) {
+      builder: (context, state) {
         final id = state.pathParameters['id']!;
-        return AccueilSerieDetail(serieId: id);
+        final serie = seriesData.firstWhere((serie) => serie['id'] == int.parse(id));
+        return SeriesDetailPage(serie: serie);
       },
     ),
+
     GoRoute(
       path: '/movies',
       builder: (BuildContext context, GoRouterState state) => AccueilMovie(),
     ),
     GoRoute(
       path: '/moviesDetail/:id',
-      builder: (BuildContext context, GoRouterState state) {
+      builder: (context, state) {
         final id = state.pathParameters['id']!;
-        return AccueilMovieDetail(movieId: id);
+        final serie = moviesData.firstWhere((serie) => serie['id'] == int.parse(id));
+        return AccueilMovieDetail(movie: serie);
       },
     ),
     GoRoute(
@@ -144,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                   label: tab.label,
                   icon: Icon(
                     tab.icon,
-                    color: Colors.grey, // Définit explicitement la couleur de l'icône
+                    color: Colors.deepOrangeAccent, // Définit explicitement la couleur de l'icône
                   ),
                 ))
                     .toList(growable: false),
@@ -179,9 +183,9 @@ class _HomePageState extends State<HomePage> {
 
 enum AppTabs {
   home('Accueil', Icons.home),
-  comics('Comics', Icons.book),
-  series('Séries', Icons.tv),
-  movies('Films', Icons.movie),
+  comics('Sports', Icons.sports_football),
+  series('Lieux', Icons.stadium),
+  movies('Evenements', Icons.star),
   search('Recherche', Icons.search);
 
   final String label;

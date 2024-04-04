@@ -1,134 +1,78 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:untitled/bloc/app_states.dart';
-import 'package:untitled/comicvine_api.dart';
-import 'package:untitled/comicvine_model.dart';
 import 'package:go_router/go_router.dart';
 
-import '../bloc/app_bloc.dart';
-import '../bloc/app_events.dart';
-
-///COULEURS
 class AppColors {
-  static const Color screenBackground = Color(0xFF15232E);
-  static const Color orange = Color(0xFFFF8100);
   static const Color cardBackground = Color(0xFF1E3243);
-  static const Color cardElementBackground = Color(0xFF284C6A);
-  static const Color seeMoreBackground = Color(0xFF0F1921);
-  static const Color bottomBarBackground = Color(0xFF0F1E2B);
-  static const Color bottomBarSelectedBackground = Color(0xFF12273C);
-  static const Color bottomBarSelectedText = Color(0xFF12273C);
-  static const Color bottomBarUnselectedText = Color(0xFF778BA8);
-  static const Color element = Colors.white;
 }
 
-///BLOC
 class AccueilSerie extends StatelessWidget {
   @override
-  final AppBloc appBloc = AppBloc(ComicVineRequests());
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => appBloc..add(FetchSeries()),
-      child: Scaffold(
-        backgroundColor: AppColors.screenBackground,
-        body: SeriesPage(),
-      ),
+    return Scaffold(
+      backgroundColor: AppColors.cardBackground,
+      body: SeriesPage(),
     );
   }
 }
 
-///PAGE LISTE SERIES
 class SeriesPage extends StatelessWidget {
-  const SeriesPage({super.key});
+  const SeriesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppState>(
-      builder: (context, state) {
-        if (state is SeriesLoading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (state is SeriesLoaded) {
-          return _buildSerieList(state.series);
-        } else if (state is SeriesError) {
-          return Center(child: Text('Erreur: '));
-        } else {
-          return Center(child: Text('État inconnu'));
-        }
-      },
-    );
-  }
-
-  Widget _buildSerieList(List<ComicVineSeries> series){
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFF1E3243),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Séries les plus populaires',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.left,
-              ),
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 48.0, left: 20),
+          child: Text(
+            'Lieux les plus populaires',
+            style: TextStyle(
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                itemCount: series.length,
-                itemBuilder: (BuildContext context, int index) {
-
-                  final serie = series[index];
-                  return InkWell(
-                    onTap: () {
-                      GoRouter.of(context).go('/seriesDetail/${serie.id}');
-                      print(serie.id);
-                    },
-                    child: Column(
-                      children: [
-                        SeriesWidget(
-                          rank: index + 1,
-                          title: serie.name ?? 'Nom inconnu',
-                          imageUrl: serie.image?.iconUrl ?? 'URL par défaut',
-                          publisher: serie.name?? 'Marvel',
-                          numberOfEpisodes: serie.nbEpisode ?? 22,
-                          date: serie.year ?? '1999',
-                        ),
-                        SizedBox(height: 16.0), // Espace entre chaque série
-                      ],
-                    ),
-                  );
-                },
+        ),
+        SizedBox(height: 16.0), // Espace
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: seriesData.length,
+          itemBuilder: (BuildContext context, int index) {
+            final serie = seriesData[index];
+            return InkWell(
+              onTap: () {
+                context.go('/seriesDetail/${serie['id']}');
+                print(serie['id']);
+              },
+              child: Column(
+                children: [
+                  SeriesWidget(
+                    rank: index + 1,
+                    title: serie['name'] ?? 'Nom inconnu',
+                    imageUrl: serie['imageUrl'] ?? 'URL par défaut',
+                    publisher: serie['publisher'] ?? 'Marvel',
+                    numberOfEpisodes: serie['numberOfEpisodes'] ?? 22,
+                    date: serie['date'] ?? '1999',
+                  ),
+                  SizedBox(height: 16.0), // Espace entre chaque série
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
+            );
+          },
+        ),
+        SizedBox(height: 40,)
+      ],
     );
   }
 }
 
-
 class SeriesWidget extends StatelessWidget {
-
   final String title;
   final String imageUrl;
   final String publisher;
-  final int numberOfEpisodes;
+  final String numberOfEpisodes;
   final String date;
   final int rank;
 
@@ -145,7 +89,7 @@ class SeriesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF1E3243),
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: EdgeInsets.all(16.0),
@@ -155,7 +99,12 @@ class SeriesWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.network(this.imageUrl, width: 128, height: 163, fit: BoxFit.cover) ,
+                child: Image.network(
+                  this.imageUrl,
+                  width: 128,
+                  height: 163,
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(width: 16.0),
               Expanded(
@@ -173,15 +122,13 @@ class SeriesWidget extends StatelessWidget {
                     SizedBox(height: 8.0),
                     Row(
                       children: [
-                        SvgPicture.asset(
-                          'assets/svg/ic_publisher_bicolor.svg',
-                          width: 15,
-                          height: 15,
+                        Icon(
+                        Icons.sports_football,
                           color: Colors.grey,
                         ),
                         SizedBox(width: 15.0),
                         Text(
-                          'Marvel',
+                          this.publisher,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,
@@ -192,10 +139,8 @@ class SeriesWidget extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        SvgPicture.asset(
-                          'assets/svg/ic_tv_bicolor.svg',
-                          width: 15,
-                          height: 15,
+                        Icon(
+                          Icons.pin_drop,
                           color: Colors.grey,
                         ),
                         SizedBox(width: 15.0),
@@ -226,7 +171,6 @@ class SeriesWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-
                   ],
                 ),
               ),
@@ -256,3 +200,29 @@ class SeriesWidget extends StatelessWidget {
   }
 }
 
+List<Map<String, dynamic>> seriesData = [
+  {
+    'id': 1,
+    'name': 'Stade Suzanne Lenglen ',
+    'imageUrl': 'https://cdn.paris.fr/eqpts-prod/2022/05/10/6a9accf9247e4bf1858044d81b78881e.jpg',
+    'publisher': 'Foot,Rugby,Tennis',
+    'numberOfEpisodes': '15 ème arrondissemnt',
+    'date': '2001',
+  },
+  {
+    'id': 2,
+    'name': 'Stade Emile Antoine',
+    'imageUrl': 'https://cdn.paris.fr/eqpts-prod/2022/05/10/82c4c2293ee4ba12c729aab03065e7f2.jpg',
+    'publisher': 'DC Comics',
+    'numberOfEpisodes': '15 ème arrondissement',
+    'date': '1998',
+  },
+  {
+    'id': 3,
+    'name': 'Piscine Keller',
+    'imageUrl': 'https://cdn.paris.fr/eqpts-prod/2022/05/30/091c85bff65e9ae7c85c279ac1a293e7.jpeg',
+    'publisher': 'Image Comics',
+    'numberOfEpisodes': '15 ème arrondissement',
+    'date': '2005',
+  },
+];
