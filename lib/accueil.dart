@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled/bloc/app_bloc.dart';
 import 'package:untitled/comicvine_api.dart';
 import 'package:untitled/Movie/movie_list.dart';
@@ -41,10 +42,17 @@ class Accueil extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SvgPicture.asset(
+                InkWell(
+                  onTap: () {
+                    GoRouter.of(context).go('/profil');
+
+                  },
+                child: SvgPicture.asset(
                   'assets/svg/avatar.svg',
                   height: 140,
                 ),
+
+                )
               ],
             ),
             Expanded(child: ListView(

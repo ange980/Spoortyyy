@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:untitled/profil.dart';
 import 'Comic/comicDetail.dart';
 import 'Movie/movieDetail.dart';
 import 'Serie/serieDetail.dart';
@@ -42,6 +43,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/comics',
       builder: (BuildContext context, GoRouterState state) => ComicsPage(),
+    ),
+    GoRoute(
+      path: '/profil',
+      builder: (BuildContext context, GoRouterState state) => ProfilePage(),
     ),
     GoRoute(
       path: '/comicsDetail/:id',
